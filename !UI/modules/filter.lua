@@ -52,28 +52,23 @@ local Spells = {
 	-- Clear Casting
     {spellId = 12536, size = 34, unitId = "player", isMine = all, filter = "HELPFUL", setPoint = {"BOTTOMLEFT", ufTarget, "TOP", 2.5, 60}},
 
-    
 	-- Fingers of Frost (Frost), Missile Barrage (Arcane), Hot Streak (Fire)
     {spellId = 44545, spellId2 = 54490, spellId3 = 44448, size = 34, unitId = "player", isMine = all, filter = "HELPFUL", setPoint = {"BOTTOMRIGHT", ufTarget, "TOP", -2.5, 60}},
 	
-
 	-- Fireball! 
     {spellId = 57761, size = 34, unitId = "player", isMine = "all", filter = "HELPFULL", setPoint = {"BOTTOMRIGHT", ufTarget, "TOP", -80.5, 60}},
 	-- Impact
     {spellId = 12358, size = 34, unitId = "target", isMine = "1", filter = "HARMFUL", setPoint = {"BOTTOMRIGHT", ufTarget, "TOP", -80.5, 60}},
 	-- Polymorph - Sheep, Pig, Turkey, Black Cat, Rabbit, Turtle, 
     {spellId = 12826, spellId2 = 28272, spellId3 = 61780, spellId4 = 61305, spellId5 = 61721, spellId6 = 28271, size = 34, unitId = "target", isMine = "1", filter = "HARMFUL", setPoint = {"BOTTOMRIGHT", ufTarget, "TOP", -80.5, 60}},
-    
 
 	-- Fiery Payback (Rank 1 and 2) 44440
     {spellId = 44442, spellId2 = 44443, size = 34, unitId = "player", isMine = "all", filter = "HELPFUL", setPoint = {"BOTTOMLEFT", ufTarget, "TOP", 80.5, 60}},
 	-- Arcane Blast debuff 
     {spellId = 36032, size = 32, unitId = "player", isMine = "all", filter = "HARMFUL", setPoint = {"BOTTOMLEFT", ufTarget, "TOP", 80.5, 60}},
-    
 	
 	-- Spell Crit - Winter's Chill (Frost), Improved Scorch (Fire)
     {spellId = 28593, spellId2 = 22959, size = 34, unitId = "target", isMine = "1", filter = "HARMFUL", setPoint = {"BOTTOMRIGHT", ufTarget, "TOP", -41.5, 60}},
-   
    
     -- Slow (Arcane), Ignite (Fire), Frostbite (Frost)
     {spellId = 31589, spellId2 = 12848, spellId3 = 12497, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = {"BOTTOMLEFT", ufTarget, "TOP", 41.5, 60}},
