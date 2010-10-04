@@ -20,10 +20,9 @@ do
 		"DropDownList1MenuBackdrop",
 		"DropDownList2MenuBackdrop"
 	}
-
 	for i = 1, #tooltips do
 		_G[tooltips[i]]:SetBackdrop(nil)
-		local bg, bd = CreateBG(_G[tooltips[i]])
+		local bg, bd = CreateBG(_G[tooltips[i]], .7)
 		bd:SetFrameStrata"TOOLTIP"
 	end
 end

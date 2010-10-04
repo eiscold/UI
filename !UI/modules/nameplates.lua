@@ -15,7 +15,7 @@ end
 
 local function ThreatUpdate(self, elapsed)
 	self.elapsed = self.elapsed + elapsed
-	if self.elapsed >= 0.2 then
+	if self.elapsed >= .2 then
 		if self.oldglow:IsShown() then
 			local _, green = self.oldglow:GetVertexColor()
 			if green > .7 then
@@ -41,8 +41,8 @@ local function UpdateFrame(self)
 		newr, newg, newb = unpack(reactioncolors[1])
 		self.healthBar:SetStatusBarColor(unpack(reactioncolors[1]))
 	elseif r + b == 0 then
-		newr, newg, newb = 0.33, 0.59, 0.33
-		self.healthBar:SetStatusBarColor(0.33, 0.59, 0.33)
+		newr, newg, newb = .33, .59, .33
+		self.healthBar:SetStatusBarColor(.33, .59, .33)
 	elseif r + g == 0 then
 		newr, newg, newb = GetMyColor()
 		self.healthBar:SetStatusBarColor(GetMyColor())
@@ -76,7 +76,7 @@ local function UpdateFrame(self)
 	self.level:SetShadowColor(0, 0, 0, 0)
 	if self.boss:IsShown() then
 		self.level:SetText"B"
-		self.level:SetTextColor(0.8, 0.05, 0)
+		self.level:SetTextColor(.8, .05, 0)
 		self.level:Show()
 	elseif not elite and level == PLEVEL then
 		self.level:Hide()
@@ -189,15 +189,15 @@ local CreateFrame = function(frame)
 	frame.elapsed = 0
 	frame:SetScript("OnUpdate", ThreatUpdate)
 
-	CreateBG(castBar)
-	CreateBG(healthBar)
+	CreateBG(castBar, .7)
+	CreateBG(healthBar, .7)
 
 	local iconFrame = CreateFrame("Frame", nil, castBar)
 	iconFrame:SetPoint("TOPLEFT", healthBar, "TOPRIGHT", 2, 2)
 	iconFrame:SetHeight(16)
 	iconFrame:SetWidth(16)
 
-	castBar.iconbg = CreateBG(iconFrame)
+	castBar.iconbg = CreateBG(iconFrame, .7)
 
 	spellIconRegion:ClearAllPoints()
 	spellIconRegion:SetAllPoints(iconFrame)
@@ -209,7 +209,7 @@ local lastUpdate = 0
 NamePlatesFrames:SetScript("OnUpdate", function(self, elapsed)
 	lastUpdate = lastUpdate + elapsed
 
-	if lastUpdate > 0.1 then
+	if lastUpdate > .1 then
 		lastUpdate = 0
 
 		if WorldFrame:GetNumChildren() ~= numKids then

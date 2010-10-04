@@ -9,7 +9,7 @@ for i = 1, 3 do
 	_G["MirrorTimer"..i]:SetWidth(Minimap:GetWidth() - 14)
 	_G["MirrorTimer"..i]:ClearAllPoints()
 	_G["MirrorTimer"..i]:SetPoint("BOTTOMRIGHT", Minimap, "TOPRIGHT", 0, 6 * i + 12 * (i - 1))
-	CreateBG(_G["MirrorTimer"..i])
+	CreateBG(_G["MirrorTimer"..i], .7)
 	_G["MirrorTimer"..i]:GetRegions():Hide()
 	_G["MirrorTimer"..i.."Border"]:Hide()
 	_G["MirrorTimer"..i.."Text"] = CreateFS(_G["MirrorTimer"..i], 12)

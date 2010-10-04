@@ -62,10 +62,10 @@ end
 
 function dummy() end
 
-function CreateBG(parent, r, g, b, abd, abg)
+function CreateBG(parent, abg, r, g, b, abd)
 	local bg = parent:CreateTexture(nil, "BACKGROUND")
 	bg:SetAllPoints(parent)
-	bg:SetTexture(r or 0, g or 0, b or 0, abg or .5)
+	bg:SetTexture(r or 0, g or 0, b or 0, abg or 1)
 	local bd = CreateFrame("Frame", nil, parent)
 	bd:SetPoint("TOPLEFT", -5, 5)
 	bd:SetPoint("BOTTOMRIGHT", 5, -5)

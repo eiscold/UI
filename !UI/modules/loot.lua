@@ -48,7 +48,7 @@ local createSlot = function(id)
 	frame:SetID(id)
 	Loot.slots[id] = frame
 
-	CreateBG(frame)
+	CreateBG(frame, .7)
 
 	frame:SetScript("OnClick", OnClick)
 	frame:SetScript("OnEnter", OnEnter)

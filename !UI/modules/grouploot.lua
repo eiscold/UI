@@ -86,7 +86,7 @@ function GroupLootFrame:UpdateGroupLoot()
 			frame:SetScript("OnMouseUp", FrameOnClick)
 			frame:SetScript("OnLeave", FrameOnLeave)
 			frame:SetScript("OnEnter", FrameOnEnter)
-			CreateBG(frame)
+			CreateBG(frame, .7)
 			frame.pass = CreateFrame("Button", nil, frame)
 			frame.pass.type = 0
 			frame.pass.roll = "pass"

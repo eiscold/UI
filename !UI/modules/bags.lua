@@ -116,7 +116,7 @@ local holder = CreateFrame("Button", "BagsHolder", UIParent)
 holder:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -50, 50)
 holder:SetFrameStrata"HIGH"
 holder:Hide()
-CreateBG(holder):SetTexture(0, 0, 0, .7)
+CreateBG(holder, .7)
 
 --[[
 local holderEquipment = CreateFrame("Button", "BagsHolderEquipment", UIParent)
@@ -243,7 +243,7 @@ local bankholder = CreateFrame("Button", "BagsBankHolder", UIParent)
 bankholder:SetFrameStrata"HIGH"
 bankholder:Hide()
 
-CreateBG(bankholder):SetTexture(0, 0, 0, .7)
+CreateBG(bankholder, .7)
 
 local function ReanchorBankButtons()
 	if firstbankopened == 1 then

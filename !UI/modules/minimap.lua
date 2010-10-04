@@ -2,7 +2,7 @@ if not Load"minimap" then
 	return
 end
 
-local Scale = 0.9
+local Scale = .9
 
 Minimap:ClearAllPoints()
 Minimap:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -50 / Scale, 50 / Scale)
@@ -16,8 +16,8 @@ Minimap:RegisterEvent"PLAYER_ENTERING_WORLD"
 Minimap:SetScript("OnEvent", function(self, event, ...)
 	local inv = CalendarGetNumPendingInvites()
 	if inv > 0 then
-		bd:SetBackdropColor(0.9, 0.1, 0.1)
-		bd:SetBackdropBorderColor(0.9, 0.1, 0.1)
+		bd:SetBackdropColor(.9, .1, .1)
+		bd:SetBackdropBorderColor(.9, .1, .1)
 	else
 		bd:SetBackdropColor(0, 0, 0)
 		bd:SetBackdropBorderColor(0, 0, 0)
