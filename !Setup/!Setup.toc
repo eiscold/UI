@@ -1,0 +1,10 @@
+## Interface: 30300
+## Title:  !Setup
+## Author: Seithra @ Nazjatar EU
+## Version: 3.3.5.1
+## Notes: Installation for !UI
+## Notes-deDE: Installation für !UI
+## DefaultState: disabled
+## Dependencies: !UI
+
+setup.lua

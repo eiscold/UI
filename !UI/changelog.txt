@@ -1,0 +1,42 @@
+3.3.5.1 2010-09-01
+	initial release
+________________________________________________________________________________
+
+3.3.5.2 2010-09-10
+	+ added unit frames heal mode
+		-> deficit bars
+		-> deficit health value
+________________________________________________________________________________
+
+3.3.5.3 2010-09-19
+	+ added party frames in arena instead of raid frames	
+
+	* changed combat text
+		-> 3 separate windows for heal, dmg, events
+
+	- deleted unneeded locale strings
+________________________________________________________________________________
+
+3.3.5.4 2010-09-28
+	+ added main tank target and target target (bug: seems not working)
+	+ added profession links
+	+ added outgoing damage frame
+
+	- deleted unneeded locale strings
+	- deleted parent of player buff frame for fading
+
+	* changed the logic for showing the backdrop/border of the reminder
+_______________________________________________________________________________
+
+3.3.5.5
+	+ added pulse code
+	+ added aero module
+	
+	* major code overhaul
+
+	!* solve bug: main tank target and target target not shown
+
+	!* rearange filter module icons
+
+		-> moved to center, above target frame
+________________________________________________________________________________

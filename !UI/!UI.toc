@@ -1,0 +1,10 @@
+## Interface: 30300
+## Title: !UI
+## Author: Seithra @ Nazjatar EU
+## Version: 3.3.5.4
+## Notes: Complete UI with a lot of extra features
+## Notes-deDE: Komplettes UI mit vielen Extras
+## RequiredDeps: Blizzard_CombatText
+## OptionalDeps: Blizzard_CombatLog, Blizzard_InspectUI
+
+!UI.xml
