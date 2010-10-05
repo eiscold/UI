@@ -77,7 +77,13 @@ end
 
 function dummy() end
 
-function CreateBG(parent, abg, r, g, b, abd)
+function CreateBD(frame, alpha, r, g, b)
+	frame:SetBackdrop(BACKDROP)
+	frame:SetBackdropColor(r or 0, g or 0, b or 0, a or .5)
+	frame:SetBackdropBorderColor(r or 0, g or 0, b or 0)
+end
+
+function CreateBG(parent, abg, abd, r, g, b)
 	local bg = parent:CreateTexture(nil, "BACKGROUND")
 	bg:SetAllPoints(parent)
 	bg:SetTexture(r or 0, g or 0, b or 0, abg or 1)
