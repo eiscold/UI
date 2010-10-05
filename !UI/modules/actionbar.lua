@@ -44,7 +44,6 @@ local function CreateHolder(name, button, a, x, y, alpha, o, scale, offset, mous
 				end
 			end
 		end
-
 		frame:EnableMouse(true)
 		frame:SetScript("OnEnter", Show)
 		frame:SetScript("OnLeave", Hide)  
