@@ -14,6 +14,7 @@
   <Script file="core\core.lua" />
   <Script file="core\load.lua" />
   <Script file="core\slash.lua" />
+  <Script file="core\theme.lua" />
 
   <Script file="configuration.lua" />
 
