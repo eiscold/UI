@@ -2,25 +2,21 @@ if not Load"minimap" then
 	return
 end
 
-local Scale = .9
-
 Minimap:ClearAllPoints()
-Minimap:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -50 / Scale, 50 / Scale)
+Minimap.scale = .9
+Minimap:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -50 / Minimap.scale, 50 / Minimap.scale)
 Minimap:SetMaskTexture"Interface\\Buttons\\WHITE8X8"
-MinimapCluster:SetScale(Scale)
-
-local bg, bd = CreateBG(Minimap)
-
+MinimapCluster:SetScale(Minimap.scale)
+Minimap.bg, Minimap.bd = CreateBG(Minimap)
 Minimap:RegisterEvent"CALENDAR_UPDATE_PENDING_INVITES"
 Minimap:RegisterEvent"PLAYER_ENTERING_WORLD"
 Minimap:SetScript("OnEvent", function(self, event, ...)
-	local inv = CalendarGetNumPendingInvites()
-	if inv > 0 then
-		bd:SetBackdropColor(.9, .1, .1)
-		bd:SetBackdropBorderColor(.9, .1, .1)
+	if CalendarGetNumPendingInvites() > 0 then
+		Minimap.bd:SetBackdropColor(.9, .1, .1)
+		Minimap.bd:SetBackdropBorderColor(.9, .1, .1)
 	else
-		bd:SetBackdropColor(0, 0, 0)
-		bd:SetBackdropBorderColor(0, 0, 0)
+		Minimap.bd:SetBackdropColor(0, 0, 0)
+		Minimap.bd:SetBackdropBorderColor(0, 0, 0)
 	end
 end)
 
@@ -39,7 +35,6 @@ do
 		"MinimapBorder",
 		"GameTimeFrame",
 	}
-
 	for i = 1, #frames do
 		_G[frames[i]]:Hide()
 		_G[frames[i]].Show = dummy
@@ -95,9 +90,9 @@ MiniMapMailIcon:SetTexture(nil)
 MiniMapMailFrame:SetHeight(15)
 MiniMapMailFrame:ClearAllPoints()
 MiniMapMailFrame:SetPoint"BOTTOM"
-local mail = CreateFS(MiniMapMailFrame, 12 / Scale)
-mail:SetPoint"CENTER"
-mail:SetText(MAIL_LABEL)
+MiniMapMailFrame.mail = CreateFS(MiniMapMailFrame, 12 / Minimap.scale)
+MiniMapMailFrame.mail:SetPoint"CENTER"
+MiniMapMailFrame.mail:SetText(MAIL_LABEL)
 
 MiniMapLFGFrameBorder:SetAlpha(0)
 MiniMapLFGFrame:ClearAllPoints()

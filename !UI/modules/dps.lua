@@ -3,136 +3,138 @@ if not Load"dps" then
 end
 
 local DpsFrame = CreateFrame"Frame"
-DpsFrame:SetScript("OnEvent", function(self, event, ...) self[event](self, event, ...) end)
+DpsFrame:SetScript("OnEvent", function(self, event, ...)
+	self[event](self, event, ...)
+end)
 
-local collecting = false
-local startTime = nil
-local endTime = nil
-local damageDone = 0
-local healDone = 0
+DpsFrame.collecting = false
+DpsFrame.startTime = nil
+DpsFrame.endTime = nil
+DpsFrame.damageDone = 0
+DpsFrame.healDone = 0
 
-local damageText = CreateFS(UIParent, 12, "LEFT")
-damageText:SetPoint("BOTTOMLEFT", ufTarget, "TOPLEFT", 0, 14)
-local damageTotalText = CreateFS(UIParent, 9, "RIGHT")
-damageTotalText:SetPoint("LEFT", damageText, "RIGHT")
-local healText = CreateFS(UIParent, 12, "LEFT")
-healText:SetPoint("LEFT", damageTotalText, "RIGHT", 10, 0)
-local healTotalText = CreateFS(UIParent, 9, "RIGHT")
-healTotalText:SetPoint("LEFT", healText, "RIGHT")
+DpsFrame.damageText = CreateFS(UIParent, 12, "LEFT")
+DpsFrame.damageText:SetPoint("BOTTOMLEFT", ufTarget, "TOPLEFT", 0, 14)
+DpsFrame.damageTotalText = CreateFS(UIParent, 9, "RIGHT")
+DpsFrame.damageTotalText:SetPoint("LEFT", DpsFrame.damageText, "RIGHT")
+DpsFrame.healText = CreateFS(UIParent, 12, "LEFT")
+DpsFrame.healText:SetPoint("LEFT", DpsFrame.damageTotalText, "RIGHT", 10, 0)
+DpsFrame.healTotalText = CreateFS(UIParent, 9, "RIGHT")
+DpsFrame.healTotalText:SetPoint("LEFT", DpsFrame.healText, "RIGHT")
 
-local playerGUID = nil
-local petGUID = nil
-local vehicleGUID = nil
+DpsFrame.playerGUID = nil
+DpsFrame.petGUID = nil
+DpsFrame.vehicleGUID = nil
 
-function UpdateDisplay()
-	if startTime ~= nil then
+local function UpdateDisplay()
+	if DpsFrame.startTime ~= nil then
 		local duration = 1
-		if (DpsFrame.lastTime - startTime) > 1 then
-			duration = DpsFrame.lastTime - startTime
+		if (DpsFrame.lastTime - DpsFrame.startTime) > 1 then
+			duration = DpsFrame.lastTime - DpsFrame.startTime
 		end
-		if damageDone ~= 0 then
-			damageText:SetFormattedText("%i", (damageDone / duration))
-			damageTotalText:SetFormattedText("%s", tostring(GetShortValue(damageDone)))
+		if DpsFrame.damageDone ~= 0 then
+			DpsFrame.damageText:SetFormattedText("%i", (DpsFrame.damageDone / duration))
+			DpsFrame.damageTotalText:SetFormattedText("%s", tostring(GetShortValue(DpsFrame.damageDone)))
 		end
-		if healDone ~= 0 then
-			healText:SetFormattedText("%i", (healDone / duration) )
-			healTotalText:SetFormattedText("%s", tostring(GetShortValue(healDone)))
-			if damageDone == 0 then
-				healText:ClearAllPoints()
-				healText:SetPoint("BOTTOMLEFT", UIParent, "BOTTOM", -114, 314)
+		if DpsFrame.healDone ~= 0 then
+			DpsFrame.healText:SetFormattedText("%i", (DpsFrame.healDone / duration) )
+			DpsFrame.healTotalText:SetFormattedText("%s", tostring(GetShortValue(DpsFrame.healDone)))
+			if DpsFrame.damageDone == 0 then
+				DpsFrame.healText:ClearAllPoints()
+				DpsFrame.healText:SetPoint("BOTTOMLEFT", UIParent, "BOTTOM", -114, 314)
 			else
-				healText:ClearAllPoints()
-				healText:SetPoint("LEFT", damageTotalText, "RIGHT", 10, 0)
+				DpsFrame.healText:ClearAllPoints()
+				DpsFrame.healText:SetPoint("LEFT", DpsFrame.damageTotalText, "RIGHT", 10, 0)
 			end
 		end
 	else
-		damageText:SetText""
-		damageTotalText:SetText""
-		healText:SetText""
-		healTotalText:SetText""
+		DpsFrame.damageText:SetText""
+		DpsFrame.damageTotalText:SetText""
+		DpsFrame.healText:SetText""
+		DpsFrame.healTotalText:SetText""
 	end
 end
 
 DpsFrame:RegisterEvent"PLAYER_LOGIN"
 function DpsFrame:PLAYER_LOGIN(self, event)
-	playerGUID = UnitGUID"player"
-	petGUID = UnitGUID"playerpet"
-	vehicleGUID = UnitGUID"vehicle"
+	DpsFrame.playerGUID = UnitGUID"player"
+	DpsFrame.petGUID = UnitGUID"playerpet"
+	DpsFrame.vehicleGUID = UnitGUID"vehicle"
 end
 
 DpsFrame:RegisterEvent"UNIT_PET"
 function DpsFrame:UNIT_PET(self, event, unit)
 	if unit == "player" then
-		petGUID = UnitGUID"playerpet"
+		DpsFrame.petGUID = UnitGUID"playerpet"
 	end
 end
 
 DpsFrame:RegisterEvent"UNIT_ENTERED_VEHICLE"
 function DpsFrame:UNIT_ENTERED_VEHICLE(self, event, unit)
 	if unit == "player" then
-		vehicleGUID = UnitGUID"vehicle"
+		DpsFrame.vehicleGUID = UnitGUID"vehicle"
 	end
 end
 
 DpsFrame:RegisterEvent"UNIT_EXITED_VEHICLE"
 function DpsFrame:UNIT_EXITED_VEHICLE(self, event, unit)
 	if unit == "player" then
-		vehicleGUID = nil
+		DpsFrame.vehicleGUID = nil
 	end
 end
 
 DpsFrame:RegisterEvent"PLAYER_REGEN_DISABLED"
 function DpsFrame:PLAYER_REGEN_DISABLED(self, event)
-	collecting = true
-	startTime = nil
+	DpsFrame.collecting = true
+	DpsFrame.startTime = nil
 	DpsFrame.lastTime = nil
-	damageDone = 0 
-	healDone = 0
+	DpsFrame.damageDone = 0 
+	DpsFrame.healDone = 0
 	UpdateDisplay()
 end
 
 DpsFrame:RegisterEvent"PLAYER_REGEN_ENABLED"
 function DpsFrame:PLAYER_REGEN_ENABLED(self, event)
-	collecting = false
+	DpsFrame.collecting = false
 	UpdateDisplay()
-	damageText:SetText""
-	damageTotalText:SetText""
-	healText:SetText""
-	healTotalText:SetText""
+	DpsFrame.damageText:SetText""
+	DpsFrame.damageTotalText:SetText""
+	DpsFrame.healText:SetText""
+	DpsFrame.healTotalText:SetText""
 end
 
 DpsFrame:RegisterEvent"PLAYER_TARGET_CHANGED"
 function DpsFrame:PLAYER_TARGET_CHANGED(self, event, arg)
 	if arg == nil then
-		damageText:SetText""
-		damageTotalText:SetText""
-		healText:SetText""
-		healTotalText:SetText""
+		DpsFrame.damageText:SetText""
+		DpsFrame.damageTotalText:SetText""
+		DpsFrame.healText:SetText""
+		DpsFrame.healTotalText:SetText""
 	end
 end
 
 DpsFrame:RegisterEvent"COMBAT_LOG_EVENT_UNFILTERED"
 function DpsFrame:COMBAT_LOG_EVENT_UNFILTERED(_, _, event, srcGuid, _, _, destGuid, _, _, param1, param2, param3, param4, param5, param6, param7, param8)
-	if collecting and (srcGuid == playerGUID or srcGuid == petGUID or srcGuid == vehicleGUID) then
+	if DpsFrame.collecting and (srcGuid == DpsFrame.playerGUID or srcGuid == DpsFrame.petGUID or srcGuid == DpsFrame.vehicleGUID) then
 		if event == "SWING_DAMAGE" then
-			damageDone = damageDone + param1
+			DpsFrame.damageDone = DpsFrame.damageDone + param1
 			DpsFrame.lastTime = GetTime()
-			if startTime == nil then
-				startTime = GetTime()
+			if DpsFrame.startTime == nil then
+				DpsFrame.startTime = GetTime()
 			end
 			UpdateDisplay()
 		elseif event == "SPELL_DAMAGE" or event == "SPELL_PERIODIC_DAMAGE" or event == "RANGE_DAMAGE" then
-			damageDone = damageDone + param4
+			DpsFrame.damageDone = DpsFrame.damageDone + param4
 			DpsFrame.lastTime = GetTime()
-			if startTime == nil then
-				startTime = GetTime()
+			if DpsFrame.startTime == nil then
+				DpsFrame.startTime = GetTime()
 			end
 			UpdateDisplay()
 		elseif event == "SPELL_HEAL" or event == "SPELL_PERIODIC_HEAL" then
-			healDone = healDone + param4
+			DpsFrame.healDone = DpsFrame.healDone + param4
 			DpsFrame.lastTime = GetTime()
-			if startTime == nil then
-				startTime = GetTime()
+			if DpsFrame.startTime == nil then
+				DpsFrame.startTime = GetTime()
 			end
 			UpdateDisplay()
 		end

@@ -6,12 +6,10 @@ local MailFrame = CreateFrame("Button", "MailButton", InboxFrame, "UIPanelButton
 MailFrame:SetPoint("BOTTOM", InboxFrame, "BOTTOM", -10, 92)
 MailFrame:SetWidth(128)
 MailFrame:SetHeight(25)
-
-local text = CreateFS(MailFrame, 12)
-text:SetTextColor(1, 1, 1)
-text:SetPoint"CENTER"
-
-local processing = false
+MailFrame.text = CreateFS(MailFrame, 12)
+MailFrame.text:SetTextColor(1, 1, 1)
+MailFrame.text:SetPoint"CENTER"
+MailFrame.processing = false
 
 local function OnEvent()
 	if not MailFrame:IsShown() then
@@ -27,11 +25,11 @@ local function OnEvent()
 		end
 		cash = cash + money
 	end
-	text:SetText(format(GOLD_AMOUNT..", %d "..ITEMS, floor(cash * 0.0001), items))
-	if processing then
+	MailFrame.text:SetText(format(GOLD_AMOUNT..", %d "..ITEMS, floor(cash * 0.0001), items))
+	if MailFrame.processing then
 		if num == 0 then
 			MiniMapMailFrame:Hide()
-			processing = false
+			MailFrame.processing = false
 			return
 		end
 		for i = num, 1, -1 do
@@ -49,14 +47,14 @@ local function OnEvent()
 end
 
 local function OnClick()
-	if not processing then
-		processing = true
+	if not MailFrame.processing then
+		MailFrame.processing = true
 		OnEvent()
 	end
 end
 
 local function OnHide()
-	processing = false
+	MailFrame.processing = false
 end
 
 MailFrame:RegisterEvent"MAIL_INBOX_UPDATE"

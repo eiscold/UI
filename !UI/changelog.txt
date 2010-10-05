@@ -34,9 +34,8 @@ _______________________________________________________________________________
 	
 	* major code overhaul
 
-	!* solve bug: main tank target and target target not shown
-
-	!* rearange filter module icons
-
+	* rearange filter module icons (mage)
 		-> moved to center, above target frame
+
+	!* solve bug: main tank target and target target not shown
 ________________________________________________________________________________

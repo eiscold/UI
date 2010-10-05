@@ -3,7 +3,9 @@
 end
 
 local EventFrame = CreateFrame"Frame"
-EventFrame:SetScript("OnEvent", function(self, event, arg1, arg2) self[event](self, event, arg1, arg2) end)
+EventFrame:SetScript("OnEvent", function(self, event, arg1, arg2)
+	self[event](self, event, arg1, arg2)
+end)
 
 if CFG.EcoFrameRate then
 	local delay = 1
@@ -111,12 +113,6 @@ if CFG.ConfirmBoPorDE then
 	function EventFrame:LOOT_BIND_CONFIRM(self, slot)
 		StaticPopup_Hide"LOOT_BIND"
 		ConfirmLootSlot(slot)
-		--[[for i = 1, STATICPOPUP_NUMDIALOGS do
-			local frame = _G["StaticPopup"..i]
-			if frame.which == "LOOT_BIND" and frame:IsVisible() then
-				StaticPopup_OnClick(frame, 1)
-			end
-		end]]
 	end
 end
 
@@ -130,7 +126,6 @@ if CFG.LeaveParty then
 		timeout = 0,
 		OnAccept = reallyLeaveParty,
 	}
-
 	_G.LeaveParty = function()
 		local _, instanceType = IsInInstance()
 		if instanceType == "none" or instanceType == "arena" or instanceType == "pvp" then

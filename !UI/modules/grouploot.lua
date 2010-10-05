@@ -5,25 +5,31 @@ end
 UIParent:UnregisterEvent"START_LOOT_ROLL"
 UIParent:UnregisterEvent"CANCEL_LOOT_ROLL"
 
-local width = 200
-local iconsize = 32
-local grouplootlist, grouplootframes = {}, {}
+local GroupLootFrame = CreateFrame("Frame", "GroupLoot", UIParent)
+GroupLootFrame:RegisterEvent"START_LOOT_ROLL"
+GroupLootFrame:SetScript("OnEvent", OnEvent)
+GroupLootFrame:SetPoint("RIGHT", -50, 0)
+GroupLootFrame:SetWidth(200)
+GroupLootFrame:SetHeight(24)
+GroupLootFrame.iconSize = 32
+GroupLootFrame.list = {}
+GroupLootFrame.frames = {}
 
 local function OnEvent(self, event, rollId)
 	local _, _, _, quality, bop, _, _, canDE = GetLootRollItemInfo(rollId)
 	if quality == 2 and not bop and PLEVEL == MAX_PLAYER_LEVEL then
 		RollOnLoot(rollId, canDE and 3 or 2)
 	else
-		tinsert(grouplootlist, {rollId = rollId})
+		tinsert(GroupLootFrame.list, {rollId = rollId})
 		self:UpdateGroupLoot()
 	end
 end
 
 local function FrameOnEvent(self, event, rollId)
 	if self.rollId and rollId == self.rollId then
-		for index, value in next, grouplootlist do
+		for index, value in next, GroupLootFrame.list do
 			if self.rollId == value.rollId then
-				tremove(grouplootlist, index)
+				tremove(GroupLootFrame.list, index)
 				break
 			end
 		end
@@ -62,25 +68,18 @@ local function SortFunc(a, b)
 	return a.rollId < b.rollId
 end
 
-local GroupLootFrame = CreateFrame("Frame", "GroupLoot", UIParent)
-GroupLootFrame:RegisterEvent"START_LOOT_ROLL"
-GroupLootFrame:SetScript("OnEvent", OnEvent)
-GroupLootFrame:SetPoint("RIGHT", -50, 0)
-GroupLootFrame:SetWidth(width)
-GroupLootFrame:SetHeight(24)
-
 function GroupLootFrame:UpdateGroupLoot()
-	sort(grouplootlist, SortFunc)
-	for index, value in next, grouplootframes do value:Hide() end
+	sort(GroupLootFrame.list, SortFunc)
+	for index, value in next, GroupLootFrame.frames do value:Hide() end
 	local frame
-	for index, value in next, grouplootlist do
-		frame = grouplootframes[index]
+	for index, value in next, GroupLootFrame.list do
+		frame = GroupLootFrame.frames[index]
 		if not frame then
 			frame = CreateFrame("Frame", "GroupLootFrame"..index, UIParent)
 			frame:EnableMouse(true)
 			frame:SetWidth(220)
 			frame:SetHeight(24)
-			frame:SetPoint("TOP", GroupLootFrame, 0, -((index-1)*(iconsize+1)))
+			frame:SetPoint("TOP", GroupLootFrame, 0, -((index - 1) * (GroupLootFrame.iconSize + 1)))
 			frame:RegisterEvent"CANCEL_LOOT_ROLL"
 			frame:SetScript("OnEvent", FrameOnEvent)
 			frame:SetScript("OnMouseUp", FrameOnClick)
@@ -130,12 +129,12 @@ function GroupLootFrame:UpdateGroupLoot()
 			frame.text:SetPoint"LEFT"
 			frame.text:SetPoint("RIGHT", frame.need, "LEFT")
 			local iconFrame = CreateFrame("Frame", nil, frame)
-			iconFrame:SetHeight(iconsize)
-			iconFrame:SetWidth(iconsize)
+			iconFrame:SetHeight(GroupLootFrame.iconSize)
+			iconFrame:SetWidth(GroupLootFrame.iconSize)
 			iconFrame:ClearAllPoints()
 			iconFrame:SetPoint("RIGHT", frame, "LEFT", -3, 0)
 			local icon = iconFrame:CreateTexture(nil, "BACKGROUND")
-			icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
+			icon:SetTexCoord(.1, .9, .1, .9)
 			icon:SetPoint("TOPLEFT", iconFrame, "TOPLEFT", 2, -2)
 			icon:SetPoint("BOTTOMRIGHT", iconFrame, "BOTTOMRIGHT", -2, 2)
 			frame.icon = icon
@@ -146,7 +145,7 @@ function GroupLootFrame:UpdateGroupLoot()
 			overlay:SetBackdrop(BACKDROP)
 			overlay:SetBackdropBorderColor(0, 0, 0)
 			frame.overlay = overlay
-			tinsert(grouplootframes, frame)
+			tinsert(GroupLootFrame.frames, frame)
 		end
 		local texture, name, count, quality, bindOnPickUp, Needable, Greedable, Disenchantable = GetLootRollItemInfo(value.rollId)
 		if Disenchantable then

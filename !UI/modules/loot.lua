@@ -2,18 +2,17 @@ if not Load"loot" then
 	return
 end
 
-local iconsize = 32
-local width = 200
-local sq, ss, sn
-
 local Loot = CreateFrame("Button", "Loot", UIParent)
 Loot:SetFrameStrata"HIGH"
-Loot:SetWidth(width)
+Loot:SetWidth(200)
 Loot:SetHeight(64)
-
+Loot.iconSize = 32
+Loot.name = nil
+Loot.quality = nil
+Loot.slot = nil
 Loot.slots = {}
 
-local OnEnter = function(self)
+local function OnEnter(self)
 	local slot = self:GetID()
 	if LootSlotIsItem(slot) then
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -22,69 +21,57 @@ local OnEnter = function(self)
 	end
 end
 
-local OnLeave = function(self)
+local function OnLeave(self)
 	GameTooltip:Hide()
 	ResetCursor()
 end
 
-local OnClick = function(self)
+local function OnClick(self)
 	if IsModifiedClick() then
 		HandleModifiedItemClick(GetLootSlotLink(self:GetID()))
 	else
 		StaticPopup_Hide"CONFIRM_LOOT_DISTRIBUTION"
-		ss = self:GetID()
-		sq = self.quality
-		sn = self.name:GetText()
-		LootSlot(ss)
+		Loot.slot = self:GetID()
+		Loot.quality = self.quality
+		Loot.name = self.name:GetText()
+		LootSlot(Loot.slot)
 	end
 end
 
-local createSlot = function(id)
+local function createSlot(id)
 	local frame = CreateFrame("Button", "lootSlot"..id, Loot)
-	frame:SetPoint("TOP", Loot, 0, -((id-1)*(iconsize+1)))
+	frame:SetPoint("TOP", Loot, 0, -((id - 1) * (Loot.iconSize + 1)))
 	frame:SetPoint"RIGHT"
 	frame:SetPoint"LEFT"
 	frame:SetHeight(24)
 	frame:SetID(id)
 	Loot.slots[id] = frame
-
 	CreateBG(frame, .7)
-
 	frame:SetScript("OnClick", OnClick)
 	frame:SetScript("OnEnter", OnEnter)
 	frame:SetScript("OnLeave", OnLeave)
-
-	local iconFrame = CreateFrame("Frame", nil, frame)
-	iconFrame:SetHeight(iconsize)
-	iconFrame:SetWidth(iconsize)
-	iconFrame:ClearAllPoints()
-	iconFrame:SetPoint("RIGHT", frame, "LEFT", -1, 0)
-
-	local icon = iconFrame:CreateTexture(nil, "BACKGROUND")
-	icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
-	icon:SetPoint("TOPLEFT", iconFrame, "TOPLEFT", 2, -2)
-	icon:SetPoint("BOTTOMRIGHT", iconFrame, "BOTTOMRIGHT", -2, 2)
-	frame.icon = icon
-
-	local overlay = CreateFrame("Frame", nil, iconFrame)
-	overlay:SetPoint("TOPLEFT", -3, 3)
-	overlay:SetPoint("BOTTOMRIGHT", 3, -3)
-	overlay:SetFrameStrata"BACKGROUND"
-	overlay:SetBackdrop(BACKDROP)
-	overlay:SetBackdropBorderColor(0, 0, 0)
-	frame.overlay = overlay
-
-	local count = CreateFS(iconFrame, 12, "RIGHT")
-	count:SetPoint("BOTTOMRIGHT", iconFrame, -1, 2)
-	count:SetText(1)
-	frame.count = count
-
-	local name = CreateFS(frame, 12, "LEFT")
-	name:SetPoint("RIGHT", frame)
-	name:SetPoint("LEFT", icon, "RIGHT", 8, 0)
-	name:SetNonSpaceWrap(true)
-	frame.name = name
-
+	frame.iconFrame = CreateFrame("Frame", nil, frame)
+	frame.iconFrame:SetHeight(Loot.iconSize)
+	frame.iconFrame:SetWidth(Loot.iconSize)
+	frame.iconFrame:ClearAllPoints()
+	frame.iconFrame:SetPoint("RIGHT", frame, "LEFT", -1, 0)
+	frame.icon = frame.iconFrame:CreateTexture(nil, "BACKGROUND")
+	frame.icon:SetTexCoord(.1, .9, .1, .9)
+	frame.icon:SetPoint("TOPLEFT", frame.iconFrame, "TOPLEFT", 2, -2)
+	frame.icon:SetPoint("BOTTOMRIGHT", frame.iconFrame, "BOTTOMRIGHT", -2, 2)
+	frame.overlay = CreateFrame("Frame", nil, frame.iconFrame)
+	frame.overlay:SetPoint("TOPLEFT", -3, 3)
+	frame.overlay:SetPoint("BOTTOMRIGHT", 3, -3)
+	frame.overlay:SetFrameStrata"BACKGROUND"
+	frame.overlay:SetBackdrop(BACKDROP)
+	frame.overlay:SetBackdropBorderColor(0, 0, 0)
+	frame.count = CreateFS(frame.iconFrame, 12, "RIGHT")
+	frame.count:SetPoint("BOTTOMRIGHT", frame.iconFrame, -1, 2)
+	frame.count:SetText(1)
+	frame.name = CreateFS(frame, 12, "LEFT")
+	frame.name:SetPoint("RIGHT", frame)
+	frame.name:SetPoint("LEFT", frame.icon, "RIGHT", 8, 0)
+	frame.name:SetNonSpaceWrap(true)
 	return frame
 end
 
@@ -93,89 +80,74 @@ Loot:SetScript("OnHide", function(self)
 	CloseLoot()
 end)
 
-Loot.LOOT_CLOSED = function(self)
+function Loot.LOOT_CLOSED(self)
 	StaticPopup_Hide"LOOT_BIND"
 	self:Hide()
-
 	for _, v in next, self.slots do
 		v:Hide()
 	end
 end
 
-Loot.LOOT_OPENED = function(self, event, autoloot)
+function Loot.LOOT_OPENED(self, event, autoloot)
 	self:Show()
-
 	if not self:IsShown() then
 		CloseLoot(not autoLoot)
 	end
-
 	local items = GetNumLootItems()
-
 	local x, y = GetCursorPosition()
 	x = x / self:GetEffectiveScale()
 	y = y / self:GetEffectiveScale()
-
 	self:ClearAllPoints()
-	self:SetPoint("TOPLEFT", nil, "BOTTOMLEFT", x-40, y+20)
+	self:SetPoint("TOPLEFT", nil, "BOTTOMLEFT", x - 40, y + 20)
 	self:Raise()
-
 	if items > 0 then
 		for i = 1, items do
 			local slot = Loot.slots[i] or createSlot(i)
 			local texture, item, quantity, quality, locked = GetLootSlotInfo(i)
 			local color = ITEM_QUALITY_COLORS[quality].hex
-
 			if LootSlotIsCoin(i) then
 				item = item:gsub("\n", ", ")
 			end
-
 			if quantity > 1 then
 				slot.count:SetText(quantity)
 				slot.count:Show()
 			else
 				slot.count:Hide()
 			end
-
 			slot.quality = quality
 			slot.name:SetText(color..item)
 			slot.icon:SetTexture(texture)
-
 			slot:Enable()
 			slot:Show()
 		end
 	else
 		local slot = Loot.slots[1] or createSlot(1)
-
 		slot.name:SetText""
 		slot.icon:SetTexture"Interface\\Icons\\INV_Misc_Herb_AncientLichen"
-
 		items = 1
-
 		slot.count:Hide()
 		slot:Disable()
 		slot:Show()
 	end
-
-	self:SetHeight(math.max((items*(iconsize+10))), 20)
+	self:SetHeight(math.max((items * (Loot.iconSize + 10))), 20)
 end
 
-Loot.LOOT_SLOT_CLEARED = function(self, event, slot)
+function Loot.LOOT_SLOT_CLEARED(self, event, slot)
 	if not self:IsShown() then
 		return
 	end
 	Loot.slots[slot]:Hide()
 end
 
-Loot.OPEN_MASTER_LOOT_LIST = function(self)
-	ToggleDropDownMenu(1, nil, GroupLootDropDown, Loot.slots[ss], 0, 0)
+function Loot.OPEN_MASTER_LOOT_LIST(self)
+	ToggleDropDownMenu(1, nil, GroupLootDropDown, Loot.slots[Loot.slot], 0, 0)
 end
 
-Loot.UPDATE_MASTER_LOOT_LIST = function(self)
+function Loot.UPDATE_MASTER_LOOT_LIST(self)
 	UIDropDownMenu_Refresh(GroupLootDropDown)
 end
 
 Loot:SetScript("OnEvent", function(self, event, arg1) self[event](self, event, arg1) end)
-
 Loot:RegisterEvent"LOOT_OPENED"
 Loot:RegisterEvent"LOOT_SLOT_CLEARED"
 Loot:RegisterEvent"LOOT_CLOSED"
@@ -187,19 +159,19 @@ LootFrame:UnregisterAllEvents()
 table.insert(UISpecialFrames, "Loot")
 
 function _G.GroupLootDropDown_GiveLoot(self)
-	if sq >= MASTER_LOOT_THREHOLD then
-		local dialog = StaticPopup_Show("CONFIRM_LOOT_DISTRIBUTION", ITEM_QUALITY_COLORS[sq].hex..sn..FONT_COLOR_CODE_CLOSE, self:GetText())
+	if Loot.quality >= MASTER_LOOT_THREHOLD then
+		local dialog = StaticPopup_Show("CONFIRM_LOOT_DISTRIBUTION", ITEM_QUALITY_COLORS[Loot.quality].hex..Loot.name..FONT_COLOR_CODE_CLOSE, self:GetText())
 		if dialog then
 			dialog.data = self.value
 		end
 	else
-		GiveMasterLoot(ss, self.value)
+		GiveMasterLoot(Loot.slot, self.value)
 	end
 	CloseDropDownMenus()
 end
 
 StaticPopupDialogs["CONFIRM_LOOT_DISTRIBUTION"].OnAccept = function(self, data)
-	GiveMasterLoot(ss, data)
+	GiveMasterLoot(Loot.slot, data)
 end
 
 LOOT_ITEM = LOOT.." %s => %s"

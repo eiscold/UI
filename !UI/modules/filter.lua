@@ -2,7 +2,6 @@ if not Load"filter" then
 	return
 end
 
-local ConfigMode = false
 local Spells = {
 
     ["DEATHKNIGHT"] = {
@@ -169,7 +168,7 @@ local MyUnits = {
 
 local function CreateFilterFrame(data)
     local spellName, _, spellIcon = GetSpellInfo(data.spellId)
-    local frame = CreateFrame("Frame", "filter_" .. data.unitId .. "_" .. data.spellId, UIParent)
+    local frame = CreateFrame("Frame", "filter_".. data.unitId.."_"..data.spellId, UIParent)
     frame:SetWidth(data.size)
     frame:SetHeight(data.size)
     frame:SetPoint(unpack(data.setPoint))
@@ -196,7 +195,6 @@ local function CreateFilterFrame(data)
                     break
                 end
             end
-
             if not self.found then
                 self:SetAlpha(0)
                 self.icon:SetTexture(spellIcon)
@@ -204,51 +202,19 @@ local function CreateFilterFrame(data)
                 self.cooldown:Hide()
             end
         end
-
-        if ConfigMode == true then
-            self:SetAlpha(1)
-            self.count:SetText(9)
-        end
     end)
-
-    if ConfigMode == true then
-        frame:SetMovable(true)
-        frame:EnableMouse(true)
-        frame:RegisterForDrag("LeftButton", "RightButton")
-        frame:SetScript("OnMouseDown", function(self)
-            if arg1 == "LeftButton" then
-                if IsShiftKeyDown() or IsAltKeyDown() then
-                    self:StartMoving()
-                end
-            else
-                self:ClearAllPoints()
-                self:SetPoint(unpack(data.setPoint))
-            end
-        end)
-        frame:SetScript("OnMouseUp", function(self) 
-            self:StopMovingOrSizing()
-            if arg1 == "LeftButton" then
-                local x, y = self:GetCenter()
-                print(format("|cffff00ffs|rFilter: setPoint for %s (%s): {\"%s\", UIParent, \"%s\", %s, %s}", data.spellId, spellName, "CENTER", "BOTTOMLEFT", floor(x + 0.5), floor(y + 0.5)))
-            end
-        end)
-    end
-
     frame.icon = frame:CreateTexture("$parentIcon", "BACKGROUND")
     frame.icon:SetAllPoints(frame)
     frame.icon:SetTexture(spellIcon)
-    frame.icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
-
+    frame.icon:SetTexCoord(.1, .9, .1, .9)
     frame.count = frame:CreateFontString(nil, "OVERLAY")
-    frame.count:SetFont("Fonts\\ARIALN.TTF", 13, "OUTLINE")
+    frame.count:SetFont(FONT, 13, "OUTLINE")
     frame.count:SetTextColor(1, 1, 1)
     frame.count:SetPoint"TOPRIGHT"
-
     frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate")
     frame.cooldown:SetPoint"TOPLEFT"
     frame.cooldown:SetPoint"BOTTOMRIGHT"
     frame.cooldown:SetReverse()
-
 	CreateBG(frame)
 end
 

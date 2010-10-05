@@ -6,7 +6,6 @@ ENTERING_COMBAT = "++ "..string.upper(COMBAT).." ++"
 LEAVING_COMBAT = "-- "..string.upper(COMBAT).." --"
 DAMAGE_TEXT_FONT = FONT
 
-
 local CombatFrame = CreateFrame"Frame"
 CombatFrame.CritPrefix = "*"
 CombatFrame.CritPostfix = "*"
@@ -17,7 +16,7 @@ CombatFrame.FontFlag = "THINOUTLINE"
 CombatFrame.Healing = true
 CombatFrame.Icons = true
 CombatFrame.IconSize = 28
-CombatFrame.Scrollable = false
+CombatFrame.Scrollable = true
 CombatFrame.Treshold = 1
 CombatFrame.TresholdHeal = 1
 
@@ -205,7 +204,7 @@ local function OnEvent(self, event, subevent, ...)
 		if subevent == CombatFrame.unit then
 			local cp = GetComboPoints(CombatFrame.unit, "target")
 				if cp > 0 then
-					r, g, b = 1, .82, .0
+					r, g, b = 1, .82, 0
 					if cp == MAX_COMBO_POINTS then
 						r, g, b = 0, .82, 1
 					end
@@ -306,7 +305,7 @@ function CombatText_AddMessage(message, scrollFunction, r, g, b, displayType, is
 end
 
 InterfaceOptionsCombatTextPanelFriendlyHealerNames:Hide()
-COMBAT_TEXT_SCROLL_ARC = nil --may cause unexpected bugs, use with caution!
+COMBAT_TEXT_SCROLL_ARC = ""
 
 hooksecurefunc("InterfaceOptionsCombatTextPanelFCTDropDown_OnClick", ScrollDirection)
 
@@ -330,7 +329,6 @@ if CombatFrame.Damage then
 	SetCVar("CombatLogPeriodicSpells", 0)
 	SetCVar("PetMeleeDamage", 0)
 	SetCVar("CombatDamage", 0)
-
 	CombatFrame4:RegisterEvent"COMBAT_LOG_EVENT_UNFILTERED"
 	if CombatFrame.DamageColor then
 		CombatFrame.dmgcolor = {}

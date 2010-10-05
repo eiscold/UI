@@ -2,29 +2,28 @@ if not Load"raidstatus" then
 	return
 end
 
-local RaidStatusFrame = CreateFrame"Button"
-local text = CreateFS(UIParent, 12, "RIGHT")
-text:SetPoint("TOPRIGHT", Minimap, "TOPRIGHT", -2, -3)
-text:SetPoint("TOPLEFT", Minimap, "TOPLEFT", 2, -3)
+local RaidStatusFrame = CreateFrame("Button", nil, UIParent)
+RaidStatusFrame.text = CreateFS(UIParent, 12, "RIGHT")
+RaidStatusFrame.text:SetPoint("TOPRIGHT", Minimap, "TOPRIGHT", -2, -3)
+RaidStatusFrame.text:SetPoint("TOPLEFT", Minimap, "TOPLEFT", 2, -3)
+RaidStatusFrame.lastUpdate = 0
+RaidStatusFrame.updateInterval = 1
+RaidStatusFrame.watches = {}
+
+local function AddWatch(name, callback)
+	RaidStatusFrame.watches[name] = callback
+end
 
 local function memberSortCompare(a, b)
 	return ((a.color.r + a.color.g + a.color.b)..a.name) < ((b.color.r + b.color.g + b.color.b)..b.name)
 end
 
-local watches = {}
-local function AddWatch(name, callback)
-	watches[name] = callback
-end
-
-local lastUpdate = 0
-local updateInterval = 1
-
 local function OnUpdate(self, elapsed)
-	lastUpdate = lastUpdate + elapsed
+	RaidStatusFrame.lastUpdate = RaidStatusFrame.lastUpdate + elapsed
 	local result = nil
-	if lastUpdate > updateInterval and GetNumRaidMembers() > 0 then
-		lastUpdate = 0
-		for name, callback in pairs(watches) do
+	if RaidStatusFrame.lastUpdate > RaidStatusFrame.updateInterval and GetNumRaidMembers() > 0 then
+		RaidStatusFrame.lastUpdate = 0
+		for name, callback in pairs(RaidStatusFrame.watches) do
 			local count = 0
 			for i = 1, GetNumRaidMembers() do
 				local unit = "raid"..i
@@ -37,20 +36,20 @@ local function OnUpdate(self, elapsed)
 			end
 		end
 		if result then
-			text:SetText(result)
-			text:Show()
-			RaidStatusFrame:SetWidth(text:GetWidth())
+			RaidStatusFrame.text:SetText(result)
+			RaidStatusFrame.text:Show()
+			RaidStatusFrame:SetWidth(RaidStatusFrame.text:GetWidth())
 		else
-			text:Hide()
+			RaidStatusFrame.text:Hide()
 		end
 	elseif GetNumRaidMembers() < 1 then
-		text:Hide()
+		RaidStatusFrame.text:Hide()
 	end
 end
 
 local function OnEnter()
 	GameTooltip:SetOwner(RaidStatusFrame, "ANCHOR_TOPLEFT")
-	for name, callback in pairs(watches) do
+	for name, callback in pairs(RaidStatusFrame.watches) do
 		local matches = {}
 		for i = 1, GetNumRaidMembers() do
 			local unit = "raid"..i

@@ -50,6 +50,17 @@ reactioncolors = {
 	[8] = {.3, 1, .3},
 }
 
+factioninfo = {
+	[1] = {{unpack(reactioncolors[1])}, FACTION_STANDING_LABEL1},
+	[2] = {{unpack(reactioncolors[2])}, FACTION_STANDING_LABEL2},
+	[3] = {{unpack(reactioncolors[3])}, FACTION_STANDING_LABEL3},
+	[4] = {{unpack(reactioncolors[4])}, FACTION_STANDING_LABEL4},
+	[5] = {{unpack(reactioncolors[5])}, FACTION_STANDING_LABEL5},
+	[6] = {{unpack(reactioncolors[6])}, FACTION_STANDING_LABEL6},
+	[7] = {{unpack(reactioncolors[7])}, FACTION_STANDING_LABEL7},
+	[8] = {{unpack(reactioncolors[8])}, FACTION_STANDING_LABEL8},
+}
+
 function GetMyColor()
 	--return .35, .55, .55
 	return .35, .35, .35, 1

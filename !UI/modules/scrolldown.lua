@@ -2,34 +2,22 @@ if not Load"scrolldown" then
 	return
 end
 
-local delay = 20
-local funcs = {
+local ScrolldownFrame = CreateFrame"Frame"
+ScrolldownFrame.delay = 5
+ScrolldownFrame.funcs = {
 	"ScrollUp",
 	"ScrollDown",
 	"ScrollToTop",
 	"PageUp",
 	"PageDown",
 }
-local handlers = {}
-local running = {}
-local scrolldowns = {}
-
-local ScrolldownFrame = CreateFrame"Frame"
+ScrolldownFrame.handlers = {}
+ScrolldownFrame.running = {}
+ScrolldownFrame.scrollDowns = {}
 ScrolldownFrame:Hide()
-ScrolldownFrame:SetScript("OnUpdate", function (ScrolldownFrame, elapsed)
-	for name, v in pairs(handlers) do
-		if running[name] then
-			v.elapsed = v.elapsed + elapsed
-			if v.elapsed >= v.rate then
-				v.func(unpack(v))
-				v.elapsed = 0
-			end
-		end
-	end
-end)
 
 local function Register(name, func, rate, ...)
-	handlers[name] = {
+	ScrolldownFrame.handlers[name] = {
 		name = name,
 		func = func,
 		rate = rate or 0,
@@ -38,38 +26,38 @@ local function Register(name, func, rate, ...)
 end
 
 local function Start(name)
-	handlers[name].elapsed = 0
-	running[name] = true
+	ScrolldownFrame.handlers[name].elapsed = 0
+	ScrolldownFrame.running[name] = true
 	ScrolldownFrame:Show()
 end
 
 local function Stop(name)
-	running[name] = nil
-	if not next(running) then
+	ScrolldownFrame.running[name] = nil
+	if not next(ScrolldownFrame.running) then
 		ScrolldownFrame:Hide()
 	end
 end
 
-local function ResetFrame(name, ScrolldownFrame)
+local function ResetFrame(name, frame)
 	Stop(name.."DownTimeout")
 	Start(name.."DownTick")
 end
 
-local function ScrollOnce(name, ScrolldownFrame)
-	if ScrolldownFrame:AtBottom() then
+local function ScrollOnce(name, frame)
+	if frame:AtBottom() then
 		Stop(name.."DownTick")
 	else
-		scrolldowns[name](ScrolldownFrame)
+		ScrolldownFrame.scrollDowns[name](frame)
 	end
 end
 
 for i = 1, 7 do
 	local name = "ChatFrame" .. i
 	local frame = _G[name]
-	scrolldowns[name] = frame.ScrollDown
-	Register(name.."DownTick", ScrollOnce, 0.1, name, frame)
-	Register(name.."DownTimeout", ResetFrame, delay, name, frame)
-	for _, func in ipairs(funcs) do
+	ScrolldownFrame.scrollDowns[name] = frame.ScrollDown
+	Register(name.."DownTick", ScrollOnce, .1, name, frame)
+	Register(name.."DownTimeout", ResetFrame, ScrolldownFrame.delay, name, frame)
+	for _, func in ipairs(ScrolldownFrame.funcs) do
 		local orig = frame[func]
 		frame[func] = function(...)
 			Stop(name.."DownTick")
@@ -79,4 +67,14 @@ for i = 1, 7 do
 	end
 end
 
-
+ScrolldownFrame:SetScript("OnUpdate", function (ScrolldownFrame, elapsed)
+	for name, v in pairs(ScrolldownFrame.handlers) do
+		if ScrolldownFrame.running[name] then
+			v.elapsed = v.elapsed + elapsed
+			if v.elapsed >= v.rate then
+				v.func(unpack(v))
+				v.elapsed = 0
+			end
+		end
+	end
+end)

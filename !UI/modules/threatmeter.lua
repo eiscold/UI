@@ -12,37 +12,33 @@ ThreatMeterFrame:SetWidth(229)
 ThreatMeterFrame:SetHeight(5)
 ThreatMeterFrame:SetPoint("BOTTOM", ufTarget, "TOP", 0, 6)
 ThreatMeterFrame:Hide()
-
-local bg = ThreatMeterFrame:CreateTexture(nil, "ARTWORK")
-bg:SetTexture(TEXTURE)
-bg:SetVertexColor(r, g, b, 0.2)
-bg:SetAllPoints(ThreatMeterFrame)
-
+ThreatMeterFrame.bg = ThreatMeterFrame:CreateTexture(nil, "ARTWORK")
+ThreatMeterFrame.bg:SetTexture(TEXTURE)
+ThreatMeterFrame.bg:SetVertexColor(r, g, b, .2)
+ThreatMeterFrame.bg:SetAllPoints(ThreatMeterFrame)
 CreateBG(ThreatMeterFrame)
-
-local nametext = CreateFS(ThreatMeterFrame, 12, "LEFT")
-nametext:SetPoint("BOTTOMLEFT", ThreatMeterFrame, "TOPLEFT", 0, 2)
- 
-local tunit, tguid = "target", ""
-local tlist = {}
+ThreatMeterFrame.text = CreateFS(ThreatMeterFrame, 12, "LEFT")
+ThreatMeterFrame.text:SetPoint("BOTTOMLEFT", ThreatMeterFrame, "TOPLEFT", 0, 2)
+ThreatMeterFrame.targetGUID = ""
+ThreatMeterFrame.targetList = {}
 
 local function AddThreat(unit)
 	if not UnitIsVisible(unit) then
 		return
 	end
-	local _, _, perc = UnitDetailedThreatSituation(unit, tunit)
+	local _, _, perc = UnitDetailedThreatSituation(unit, "target")
 	if not perc or perc < 1 then
 		return
 	end
 	local _, class = UnitClass(unit)
 	local name = UnitName(unit)
-	for index, value in ipairs(tlist) do
+	for index, value in ipairs(ThreatMeterFrame.targetList) do
 		if value.name == name then
-			tremove(tlist, index)
+			tremove(ThreatMeterFrame.targetList, index)
 			break
 		end
 	end
-	tinsert(tlist, {
+	tinsert(ThreatMeterFrame.targetList, {
 		name = name,
 		class = class,
 		perc = perc,
@@ -54,17 +50,17 @@ local function SortThreat(a, b)
 end
 
 local function UpdateBar()
-	sort(tlist, SortThreat)
-	local tanking = UnitDetailedThreatSituation("player", tunit)
-	for i, v in ipairs(tlist) do
+	sort(ThreatMeterFrame.targetList, SortThreat)
+	local tanking = UnitDetailedThreatSituation("player", "target")
+	for i, v in ipairs(ThreatMeterFrame.targetList) do
 		if (tanking and i == 2) or (not tanking and v.name == PNAME) then
-			ThreatMeterFrame:SetStatusBarColor(1, .35, .2)
+			ThreatMeterFrame:SetStatusBarColor(unpack(reactioncolors[1]))
 			ThreatMeterFrame:SetValue(floor(v.perc))
 			if tanking then
-				nametext:SetText(v.name)
+				ThreatMeterFrame.text:SetText(v.name)
 			else
 				ThreatMeterFrame:SetStatusBarColor(r, g, b)
-				nametext:SetText""
+				ThreatMeterFrame.text:SetText""
 			end
 			return ThreatMeterFrame:Show()
 		end
@@ -72,33 +68,35 @@ local function UpdateBar()
 	ThreatMeterFrame:Hide()
 end
 
-ThreatMeterFrame:SetScript("OnEvent", function(self, event, unit) self[event](self, event, unit) end)
+ThreatMeterFrame:SetScript("OnEvent", function(self, event, unit)
+	self[event](self, event, unit)
+end)
 
 ThreatMeterFrame:RegisterEvent"PLAYER_REGEN_ENABLED"
 function ThreatMeterFrame:PLAYER_REGEN_ENABLED()
-	wipe(tlist)
+	wipe(ThreatMeterFrame.targetList)
 	UpdateBar()
 end
 
 ThreatMeterFrame:RegisterEvent"PLAYER_TARGET_CHANGED"
 function ThreatMeterFrame:PLAYER_TARGET_CHANGED()
-	wipe(tlist)
-	if UnitExists(tunit) and not UnitIsDead(tunit) and not UnitIsPlayer(tunit) and not UnitIsFriend("player", tunit) then
-		tguid = UnitGUID(tunit)
-		if UnitThreatSituation("player", tunit) then
-			ThreatMeterFrame:UNIT_THREAT_LIST_UPDATE("UNIT_THREAT_LIST_UPDATE", tunit)
+	wipe(ThreatMeterFrame.targetList)
+	if UnitExists"target" and not UnitIsDead"target" and not UnitIsPlayer"target" and not UnitIsFriend("player", "target") then
+		ThreatMeterFrame.targetGUID = UnitGUID"target"
+		if UnitThreatSituation("player", "target") then
+			ThreatMeterFrame:UNIT_THREAT_LIST_UPDATE("UNIT_THREAT_LIST_UPDATE", "target")
 		else
 			UpdateBar()
 		end
 	else
-		tguid = ""
+		ThreatMeterFrame.targetGUID = ""
 		UpdateBar()
 	end
 end
 
 ThreatMeterFrame:RegisterEvent"UNIT_THREAT_LIST_UPDATE"
 function ThreatMeterFrame:UNIT_THREAT_LIST_UPDATE(event, unit)
-	if unit and UnitExists(unit) and UnitGUID(unit) == tguid then
+	if unit and UnitExists(unit) and UnitGUID(unit) == ThreatMeterFrame.targetGUID then
 		if GetNumRaidMembers() > 0 then
 			for i = 1, GetNumRaidMembers() do
 				AddThreat("raid"..i)

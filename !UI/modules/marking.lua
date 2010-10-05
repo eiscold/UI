@@ -3,8 +3,7 @@
 end
 
 local MarkingFrame = CreateFrame("Frame", "SettingsMarkingFrame", UIParent, "UIDropDownMenuTemplate")
-
-local menuList = {
+MarkingFrame.menuList = {
 	{text = RAID_TARGET_NONE, func = function() SetRaidTarget("target", 0) end},
 	{text = RAID_TARGET_8, func = function() SetRaidTarget("target", 8) end},
 	{text = "|cffff0000"..RAID_TARGET_7.."|r", func = function() SetRaidTarget("target", 7) end},
@@ -20,7 +19,7 @@ WorldFrame:HookScript("OnMouseDown", function(self, button)
 	if button == "LeftButton" and IsShiftKeyDown() and UnitExists"mouseover" then
 		local numparty, numraid = GetNumPartyMembers(), GetNumRaidMembers()
 		if (numraid > 0 and select(2, GetRaidRosterInfo(numraid)) ~= 0) or (numraid == 0 and numparty > 0) then
-			EasyMenu(menuList, MarkingFrame, "cursor", 0, 0, "MENU", 1)
+			EasyMenu(MarkingFrame.menuList, MarkingFrame, "cursor", 0, 0, "MENU", 1)
 		end
 	end
 end)

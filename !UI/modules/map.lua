@@ -3,8 +3,6 @@ if not Load"map" then
 end
 
 WORLDMAP_WINDOWED_SIZE = .82
- 
-local fontsize = 12 / WORLDMAP_WINDOWED_SIZE
 
 local MapFrame = CreateFrame"Frame"
 MapFrame:RegisterEvent"PLAYER_LOGIN"
@@ -13,6 +11,7 @@ MapFrame:RegisterEvent"RAID_ROSTER_UPDATE"
 MapFrame:RegisterEvent"WORLD_MAP_UPDATE"
 MapFrame:RegisterEvent"PLAYER_REGEN_ENABLED"
 MapFrame:RegisterEvent"PLAYER_REGEN_DISABLED"
+MapFrame.fontSize = 12 / WORLDMAP_WINDOWED_SIZE
  
 local SmallerMap = GetCVarBool"miniWorldMap"
 if SmallerMap == nil then
@@ -44,14 +43,14 @@ local function SmallerMapSkin()
 	WorldMapFrameSizeDownButton:SetPoint("TOPRIGHT", WorldMapFrameMiniBorderRight, "TOPRIGHT", -66, 5)
 	WorldMapFrameTitle:ClearAllPoints()
 	WorldMapFrameTitle:SetPoint("BOTTOMLEFT", WorldMapDetailFrame, 3, 5)
-	WorldMapFrameTitle:SetFont(FONT, fontsize, "OUTLINE")
+	WorldMapFrameTitle:SetFont(FONT, MapFrame.fontSize, "OUTLINE")
 	WorldMapFrameTitle:SetTextColor(1, 1, 1)
 	WorldMapFrameTitle:SetShadowColor(0, 0, 0, 0)
 	WorldMapFrameTitle:SetParent(ald)	
 	WorldMapQuestShowObjectives:SetParent(ald)
 	WorldMapQuestShowObjectives:ClearAllPoints()
 	WorldMapQuestShowObjectives:SetPoint("BOTTOMRIGHT", WorldMapButton, "BOTTOMRIGHT", 0, -1)
-	WorldMapQuestShowObjectivesText:SetFont(FONT, fontsize, "OUTLINE")
+	WorldMapQuestShowObjectivesText:SetFont(FONT, MapFrame.fontSize, "OUTLINE")
 	WorldMapQuestShowObjectivesText:ClearAllPoints()
 	WorldMapQuestShowObjectivesText:SetPoint("RIGHT", WorldMapQuestShowObjectives, "LEFT", -4, 1)
 	WorldMapQuestShowObjectivesText:SetTextColor(1, 1, 1)
@@ -59,7 +58,7 @@ local function SmallerMapSkin()
 	WorldMapTrackQuest:SetParent(ald)
 	WorldMapTrackQuest:ClearAllPoints()
 	WorldMapTrackQuest:SetPoint("TOPLEFT", WorldMapDetailFrame, 9, -5)
-	WorldMapTrackQuestText:SetFont(FONT, fontsize, "OUTLINE")
+	WorldMapTrackQuestText:SetFont(FONT, MapFrame.fontSize, "OUTLINE")
 	WorldMapTrackQuestText:SetTextColor(1, 1, 1)
 	WorldMapTrackQuestText:SetShadowColor(0, 0, 0, 0)
 	WorldMapTitleButton:SetFrameStrata"TOOLTIP"
@@ -72,7 +71,7 @@ end)
 local function CreateText(offset)
 	local text = WorldMapButton:CreateFontString(nil, "ARTWORK")
 	text:SetPoint("BOTTOMLEFT", WorldMapButton, 3, offset)
-	text:SetFont(FONT, fontsize, "OUTLINE")
+	text:SetFont(FONT, MapFrame.fontSize, "OUTLINE")
 	text:SetTextColor(1, 1, 1)
 	text:SetJustifyH"LEFT"
 	return text
@@ -164,7 +163,7 @@ MapFrame:SetScript("OnEvent", function(self, event, ...)
 	local elapsed = 0
 	self:SetScript("OnUpdate", function(self, u)
 		elapsed = elapsed + u
-		if elapsed > 0.1 then
+		if elapsed > .1 then
 			OnUpdate(player, cursor)
 			elapsed = 0
 		end

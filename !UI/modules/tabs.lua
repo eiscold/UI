@@ -3,16 +3,16 @@ if not Load"tabs" then
 end
 
 local ChatTabFrame = CreateFrame"Frame"
-local inherit = GameFontNormalSmall
-local r, g, b = unpack(reactioncolors[1])
-local alpha = .3
+ChatTabFrame.alpha = .3
+ChatTabFrame.color = {}
+ChatTabFrame.color.r, ChatTabFrame.color.g, ChatTabFrame.color.b = unpack(reactioncolors[1])
+ChatTabFrame.fontSize = 10
 
 local function updateFS(self, inc, flags, ...)
-	local font, fontSize = inherit:GetFont()
 	if inc then
-		self:GetFontString():SetFont(font, fontSize + 1, flags)
+		self:GetFontString():SetFont(FONT, ChatTabFrame.fontSize + 1, flags)
 	else
-		self:GetFontString():SetFont(font, fontSize, flags)
+		self:GetFontString():SetFont(FONT, ChatTabFrame.fontSize, flags)
 	end
 	if ... then
 		self:GetFontString():SetTextColor(...)
@@ -20,7 +20,7 @@ local function updateFS(self, inc, flags, ...)
 end
 
 local function OnEnter(self)
-	updateFS(self, _G["ChatFrame"..self:GetID().."TabFlash"]:IsShown(), "OUTLINE", r, g, b)
+	updateFS(self, _G["ChatFrame"..self:GetID().."TabFlash"]:IsShown(), "OUTLINE", ChatTabFrame.color.r, ChatTabFrame.color.g, ChatTabFrame.color.b)
 end
 
 local function OnLeave(self)
@@ -32,7 +32,7 @@ local function OnLeave(self)
 	else
 		r, g, b = 1, 1, 1
 	end
-	updateFS(self, _G["ChatFrame"..self:GetID().."TabFlash"]:IsShown(), nil, r, g, b, alpha)
+	updateFS(self, _G["ChatFrame"..self:GetID().."TabFlash"]:IsShown(), nil, r, g, b, ChatTabFrame.alpha)
 end
 
 local function ChatFrame2_SetAlpha(self, alpha)
@@ -80,9 +80,9 @@ local function StyleTab(frame, sel)
 	end
 	if frame:GetID() == SELECTED_CHAT_FRAME:GetID() then
 		local r, g, b = GetMyColor()
-		updateFS(frame, nil, nil, r, g, b, alpha)
+		updateFS(frame, nil, nil, r, g, b, ChatTabFrame.alpha)
 	else
-		updateFS(frame, nil, nil, 1, 1, 1, alpha)
+		updateFS(frame, nil, nil, 1, 1, 1, ChatTabFrame.alpha)
 	end
 end
 

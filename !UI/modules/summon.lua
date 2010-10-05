@@ -11,33 +11,31 @@ SummonFrame:Hide()
 SummonFrame:SetScript("OnEvent",
 	function(self, event, ...) self[event](self, event, ...)
 end)
-
-local SummonPulseFrame = CreateFrame("Frame", nil, UIParent)
-SummonPulseFrame:SetHeight(15)
-SummonPulseFrame:SetWidth(SummonFrame:GetWidth())
-SummonPulseFrame:SetPoint("CENTER", SummonFrame, "CENTER")
-SummonPulseFrame:SetFrameStrata"BACKGROUND"
-SummonPulseFrame.bg, SummonPulseFrame.bd = CreateBG(SummonPulseFrame, .7)
-SummonPulseFrame.bd:Hide()
-SummonPulseFrame.bg:SetTexture(.9, .1, .1)
-SummonPulseFrame:Hide()
-
-local timer = CreateFS(SummonFrame, 12, "RIGHT")
-timer:SetPoint("TOPLEFT", SummonFrame, "TOPLEFT")
-timer:SetPoint("TOPRIGHT", SummonFrame, "TOPRIGHT")
-local summoner = CreateFS(SummonFrame, 12, "CENTER")
-local location = CreateFS(SummonFrame, 12, "LEFT")
-location:SetPoint("TOPLEFT", SummonFrame, "TOPLEFT")
-location:SetPoint("TOPRIGHT", SummonFrame, "TOPRIGHT", -25, 0)
-local totalElapsed = 0
-local pending = false
-local bg = 0
+SummonFrame.pulseFrame = CreateFrame("Frame", nil, UIParent)
+SummonFrame.pulseFrame:SetHeight(15)
+SummonFrame.pulseFrame:SetWidth(SummonFrame:GetWidth())
+SummonFrame.pulseFrame:SetPoint("CENTER", SummonFrame, "CENTER")
+SummonFrame.pulseFrame:SetFrameStrata"BACKGROUND"
+SummonFrame.pulseFrame.bg, SummonFrame.pulseFrame.bd = CreateBG(SummonFrame.pulseFrame, .7)
+SummonFrame.pulseFrame.bd:Hide()
+SummonFrame.pulseFrame.bg:SetTexture(.9, .1, .1)
+SummonFrame.pulseFrame:Hide()
+SummonFrame.timer = CreateFS(SummonFrame, 12, "RIGHT")
+SummonFrame.timer:SetPoint("TOPLEFT", SummonFrame, "TOPLEFT")
+SummonFrame.timer:SetPoint("TOPRIGHT", SummonFrame, "TOPRIGHT")
+SummonFrame.summoner = CreateFS(SummonFrame, 12, "CENTER")
+SummonFrame.location = CreateFS(SummonFrame, 12, "LEFT")
+SummonFrame.location:SetPoint("TOPLEFT", SummonFrame, "TOPLEFT")
+SummonFrame.location:SetPoint("TOPRIGHT", SummonFrame, "TOPRIGHT", -25, 0)
+SummonFrame.totalElapsed = 0
+SummonFrame.pending = false
+SummonFrame.battleground = 0
 
 local function Accept()
-	if bg == 0 then
+	if SummonFrame.battleground == 0 then
 		ConfirmSummon()
 	else
-		AcceptBattlefieldPort(bg, true)
+		AcceptBattlefieldPort(SummonFrame.battleground, true)
 	end
 end
 
@@ -46,30 +44,30 @@ local function Cancel()
 end
 
 function Update(self, elapsed)
-	totalElapsed = totalElapsed + elapsed
-	if totalElapsed >= .5 then
+	SummonFrame.totalElapsed = SummonFrame.totalElapsed + elapsed
+	if SummonFrame.totalElapsed >= .5 then
 		UpdateTimer()
-		totalElapsed = 0
+		SummonFrame.totalElapsed = 0
 	end
 end
 
 function UpdateTimer()
 	local timeLeft
-	if bg == 0 then
+	if SummonFrame.battleground == 0 then
 		timeLeft = GetSummonConfirmTimeLeft()
 	else
-		timeLeft = GetBattlefieldPortExpiration(bg)
+		timeLeft = GetBattlefieldPortExpiration(SummonFrame.battleground)
 	end
-	if timeLeft ~= nil and timeLeft > 0 and pending then
+	if timeLeft ~= nil and timeLeft > 0 and SummonFrame.pending then
 		local min = floor(timeLeft / 60)
 		local sec = tostring(mod(timeLeft, 60))
 		if tonumber(sec) < 10 then
 			sec = "0"..sec
 		end
-		timer:SetFormattedText("%i:%s", min, sec)
+		SummonFrame.timer:SetFormattedText("%i:%s", min, sec)
 	else
 		print(L["SummonMissed"])
-		pending = false
+		SummonFrame.pending = false
 		SummonFrame:Hide()
 		SummonFrame:SetScript("OnUpdate", nil)
 	end
@@ -78,11 +76,11 @@ end
 SummonFrame:RegisterEvent"CONFIRM_SUMMON"
 function SummonFrame:CONFIRM_SUMMON(self, ...)
 	StaticPopup_Hide"CONFIRM_SUMMON"
-	pending = true
-	bg = 0
-	summoner:SetText(GetSummonConfirmSummoner())
-	location:SetText(GetSummonConfirmAreaName())
-	print(format(L["SummonNew"], summoner:GetText(), location:GetText()))
+	SummonFrame.pending = true
+	SummonFrame.battleground = 0
+	SummonFrame.summoner:SetText(GetSummonConfirmSummoner())
+	SummonFrame.location:SetText(GetSummonConfirmAreaName())
+	print(format(L["SummonNew"], SummonFrame.summoner:GetText(), SummonFrame.location:GetText()))
 	SummonFrame:Show()
 	SummonFrame:SetScript("OnUpdate", function(...) Update(...) end)
 end
@@ -93,10 +91,10 @@ function SummonFrame:UPDATE_BATTLEFIELD_STATUS(self, ...)
 		status, mapName, instanceID = GetBattlefieldStatus(i)
 		if status == "confirm" then
 			StaticPopup_Hide"CONFIRM_BATTLEFIELD_ENTRY"
-			pending = true
-			bg = i
-			location:SetText(mapName)
-			print(format("%s: %s", BATTLEFIELD_JOIN, location:GetText()))
+			SummonFrame.pending = true
+			SummonFrame.battleground = i
+			SummonFrame.location:SetText(mapName)
+			print(format("%s: %s", BATTLEFIELD_JOIN, SummonFrame.location:GetText()))
 			SummonFrame:Show()
 			SummonFrame:SetScript("OnUpdate", function(...) Update(...) end)
 		end
@@ -105,25 +103,25 @@ end
 
 SummonFrame:RegisterForClicks"AnyUp"
 SummonFrame:SetScript("OnClick", function(self, button, down)
-	if button == "LeftButton" and pending then
+	if button == "LeftButton" and SummonFrame.pending then
 		Accept()
 		SummonFrame:Hide()
-		pending = false
+		SummonFrame.pending = false
 		SummonFrame:SetScript("OnUpdate", nil)
-	elseif button == "RightButton" and pending then
+	elseif button == "RightButton" and SummonFrame.pending then
 		Cancel()
 		SummonFrame:Hide()
-		pending = false
+		SummonFrame.pending = false
 		SummonFrame:SetScript("OnUpdate", nil)
 	end
 end)
 
 SummonFrame:SetScript("OnShow", function(self, event, ...)
-	SummonPulseFrame:Show()
-	CreatePulse(SummonPulseFrame)
+	SummonFrame.pulseFrame:Show()
+	CreatePulse(SummonFrame.pulseFrame)
 end)
 
 SummonFrame:SetScript("OnHide", function(self, event, ...)
-	DestroyPulse(SummonPulseFrame)
-	SummonPulseFrame:Hide()
+	DestroyPulse(SummonFrame.pulseFrame)
+	SummonFrame.pulseFrame:Hide()
 end)

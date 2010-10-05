@@ -2,7 +2,9 @@ if not Load"reminder" then
 	return
 end
 
-local SelfBuffs = {
+local ReminderFrame = CreateFrame("Frame", nil, ufPlayer)
+ReminderFrame.reminders = {}
+ReminderFrame.buffs = {
 	["DEATHKNIGHT"] = {
 		[1] = {
 			57330, -- horn of Winter
@@ -96,16 +98,13 @@ local SelfBuffs = {
 	},
 }
 
-local ReminderFrame = CreateFrame("Frame", nil, ufPlayer)
-ReminderFrame.reminders = {}
-
 local function OnEvent(self, event)
 	if event == "PLAYER_LOGIN" or event == "LEARNED_SPELL_IN_TAB" then
-		for i = 1, #SelfBuffs[PCLASS][self.num] do
-			local name = GetSpellInfo(SelfBuffs[PCLASS][self.num][i])
+		for i = 1, #ReminderFrame.buffs[PCLASS][self.num] do
+			local name = GetSpellInfo(ReminderFrame.buffs[PCLASS][self.num][i])
 			local usable, nomana = IsUsableSpell(name)
 			if usable or nomana then
-				self.icon:SetTexture(select(3, GetSpellInfo(SelfBuffs[PCLASS][self.num][i])))
+				self.icon:SetTexture(select(3, GetSpellInfo(ReminderFrame.buffs[PCLASS][self.num][i])))
 				break
 			end
 		end
@@ -129,8 +128,8 @@ local function OnEvent(self, event)
 		end
 	end
 	if not UnitAffectingCombat"player" and not UnitInVehicle"player" and not UnitIsDead"player" and not UnitIsGhost"player" then
-		for i = 1, #SelfBuffs[PCLASS][self.num] do
-			local name = GetSpellInfo(SelfBuffs[PCLASS][self.num][i])
+		for i = 1, #ReminderFrame.buffs[PCLASS][self.num] do
+			local name = GetSpellInfo(ReminderFrame.buffs[PCLASS][self.num][i])
 			if name and UnitBuff("player", name) then
 				self:Hide()
 				return
@@ -142,7 +141,7 @@ local function OnEvent(self, event)
 	end
 end
 
-for i = 1, #SelfBuffs[PCLASS] do
+for i = 1, #ReminderFrame.buffs[PCLASS] do
 	ReminderFrame.reminders[i] = CreateFrame("Frame", nil, ReminderFrame)
 	ReminderFrame.reminders[i]:SetHeight(28)
 	ReminderFrame.reminders[i]:SetWidth(28)

@@ -2,21 +2,9 @@ if not Load"exprepbar" then
 	return
 end
 
-local W, H = 5, Minimap:GetHeight() - 14
-
-local FactionInfo = {
-	[1] = {{unpack(reactioncolors[1])}, FACTION_STANDING_LABEL1},
-	[2] = {{unpack(reactioncolors[2])}, FACTION_STANDING_LABEL2},
-	[3] = {{unpack(reactioncolors[3])}, FACTION_STANDING_LABEL3},
-	[4] = {{unpack(reactioncolors[4])}, FACTION_STANDING_LABEL4},
-	[5] = {{unpack(reactioncolors[5])}, FACTION_STANDING_LABEL5},
-	[6] = {{unpack(reactioncolors[6])}, FACTION_STANDING_LABEL6},
-	[7] = {{unpack(reactioncolors[7])}, FACTION_STANDING_LABEL7},
-	[8] = {{unpack(reactioncolors[8])}, FACTION_STANDING_LABEL8},
-
-}
-
 local ExpRepBarFrame = CreateFrame("Frame", nil, UIParent)
+ExpRepBarFrame.width = 5
+ExpRepBarFrame.height = Minimap:GetHeight() - 14
 
 local function colorize(rank)
 	local r, g, b = unpack(reactioncolors[rank])
@@ -24,63 +12,56 @@ local function colorize(rank)
 end
 
 local function SetupBars()
-	local backdrop = CreateFrame("Frame", nil, ExpRepBarFrame)
-	backdrop:SetHeight(H)
-	backdrop:SetWidth(W)
-	backdrop:SetPoint("LEFT", Minimap, "RIGHT", 6, 0)
-	CreateBG(backdrop, .7)
-	backdrop:SetBackdrop(BACKDROP)
-	backdrop:SetBackdropColor(0, 0, 0, .6)
-	backdrop:SetBackdropBorderColor(0, 0, 0)
+	ExpRepBarFrame.backdrop = CreateFrame("Frame", nil, ExpRepBarFrame)
+	ExpRepBarFrame.backdrop:SetHeight(ExpRepBarFrame.height)
+	ExpRepBarFrame.backdrop:SetWidth(ExpRepBarFrame.width)
+	ExpRepBarFrame.backdrop:SetPoint("LEFT", Minimap, "RIGHT", 6, 0)
+	CreateBG(ExpRepBarFrame.backdrop, .7)
+	ExpRepBarFrame.backdrop:SetBackdrop(BACKDROP)
+	ExpRepBarFrame.backdrop:SetBackdropColor(0, 0, 0, .7)
+	ExpRepBarFrame.backdrop:SetBackdropBorderColor(0, 0, 0)
+	ExpRepBarFrame.backdrop:SetFrameLevel(0)
 	
-	backdrop:SetFrameLevel(0)
-	ExpRepBarFrame.backdrop = backdrop
+	ExpRepBarFrame.xpBar = CreateFrame("StatusBar", nil, ExpRepBarFrame, "TextStatusBar")
+	ExpRepBarFrame.xpBar:SetWidth(ExpRepBarFrame.width - 1)
+	ExpRepBarFrame.xpBar:SetHeight(ExpRepBarFrame.height - 1)
+	ExpRepBarFrame.xpBar:SetPoint("TOP", ExpRepBarFrame.backdrop, "TOP", 0, -1)
+	ExpRepBarFrame.xpBar:SetStatusBarTexture(TEXTURE)
+	ExpRepBarFrame.xpBar:SetOrientation"VERTICAL"
+	ExpRepBarFrame.xpBar:SetFrameLevel(2)
 	
-	local xpBar = CreateFrame("StatusBar", nil, ExpRepBarFrame, "TextStatusBar")
-	xpBar:SetWidth(W - 1)
-	xpBar:SetHeight(H - 1)
-	xpBar:SetPoint("TOP", backdrop,"TOP", 0, -1)
-	xpBar:SetStatusBarTexture(TEXTURE)
-	xpBar:SetOrientation"VERTICAL"
-	xpBar:SetFrameLevel(2)
-	ExpRepBarFrame.xpBar = xpBar
+	ExpRepBarFrame.restedxpBar = CreateFrame("StatusBar", nil, ExpRepBarFrame, "TextStatusBar")
+	ExpRepBarFrame.restedxpBar:SetWidth(ExpRepBarFrame.width - 1)
+	ExpRepBarFrame.restedxpBar:SetHeight(ExpRepBarFrame.height - 1)
+	ExpRepBarFrame.restedxpBar:SetPoint("TOP", ExpRepBarFrame.backdrop,"TOP", 0, -1)
+	ExpRepBarFrame.restedxpBar:SetStatusBarTexture(TEXTURE)
+	ExpRepBarFrame.restedxpBar:SetFrameLevel(1)
+	ExpRepBarFrame.restedxpBar:SetOrientation"VERTICAL"
+	ExpRepBarFrame.restedxpBar:Hide()
 	
-	local restedxpBar = CreateFrame("StatusBar", nil, ExpRepBarFrame, "TextStatusBar")
-	restedxpBar:SetWidth(W - 1)
-	restedxpBar:SetHeight(H - 1)
-	restedxpBar:SetPoint("TOP", backdrop,"TOP", 0, -1)
-	restedxpBar:SetStatusBarTexture(TEXTURE)
-	restedxpBar:SetFrameLevel(1)
-	restedxpBar:SetOrientation"VERTICAL"
-	restedxpBar:Hide()
-	ExpRepBarFrame.restedxpBar = restedxpBar
-	
-	local repBar = CreateFrame("StatusBar", nil, ExpRepBarFrame, "TextStatusBar")
-	repBar:SetWidth(W - 1)
-	repBar:SetHeight(1)
-	repBar:SetPoint("TOP", xpBar, "BOTTOM", 0, 0)
-	repBar:SetStatusBarTexture(TEXTURE)
-	repBar:SetFrameLevel(1)
-	repBar:SetOrientation"VERTICAL"
-	repBar:Hide()
-	ExpRepBarFrame.repBar = repBar
+	ExpRepBarFrame.repBar = CreateFrame("StatusBar", nil, ExpRepBarFrame, "TextStatusBar")
+	ExpRepBarFrame.repBar:SetWidth(ExpRepBarFrame.width - 1)
+	ExpRepBarFrame.repBar:SetHeight(1)
+	ExpRepBarFrame.repBar:SetPoint("TOP", ExpRepBarFrame.xpBar, "BOTTOM", 0, 0)
+	ExpRepBarFrame.repBar:SetStatusBarTexture(TEXTURE)
+	ExpRepBarFrame.repBar:SetFrameLevel(1)
+	ExpRepBarFrame.repBar:SetOrientation"VERTICAL"
+	ExpRepBarFrame.repBar:Hide()
 
-	local sep = CreateFrame("Frame", nil, ExpRepBarFrame)
-	sep:SetWidth(W - 1)
-	sep:SetHeight(1)
-	sep:SetPoint("TOP", xpBar, "BOTTOM")
-	sep:SetBackdrop({
+	ExpRepBarFrame.sep = CreateFrame("Frame", nil, ExpRepBarFrame)
+	ExpRepBarFrame.sep:SetWidth(ExpRepBarFrame.width - 1)
+	ExpRepBarFrame.sep:SetHeight(1)
+	ExpRepBarFrame.sep:SetPoint("TOP", ExpRepBarFrame.xpBar, "BOTTOM")
+	ExpRepBarFrame.sep:SetBackdrop({
 		bgFile = "",
 	})
-	sep:SetBackdropColor(0, 0, 0)
-	sep:Hide()
-	ExpRepBarFrame.sep = sep
+	ExpRepBarFrame.sep:SetBackdropColor(0, 0, 0)
+	ExpRepBarFrame.sep:Hide()
 	
-	local mouseFrame = CreateFrame("Frame", nil, ExpRepBarFrame)
-	mouseFrame:SetAllPoints(backdrop)
-	mouseFrame:SetFrameLevel(3)
-	mouseFrame:EnableMouse(true)
-	ExpRepBarFrame.mouseFrame = mouseFrame
+	ExpRepBarFrame.mouseFrame = CreateFrame("Frame", nil, ExpRepBarFrame)
+	ExpRepBarFrame.mouseFrame:SetAllPoints(ExpRepBarFrame.backdrop)
+	ExpRepBarFrame.mouseFrame:SetFrameLevel(3)
+	ExpRepBarFrame.mouseFrame:EnableMouse(true)
 end
 
 local function ShowBars()
@@ -111,25 +92,25 @@ local function ShowBars()
 			if not ExpRepBarFrame.repBar:IsShown() then
 				ExpRepBarFrame.repBar:Show()
 			end
-			ExpRepBarFrame.repBar:SetStatusBarColor(unpack(FactionInfo[rank][1]))
+			ExpRepBarFrame.repBar:SetStatusBarColor(unpack(factioninfo[rank][1]))
 			ExpRepBarFrame.repBar:SetMinMaxValues(min, max)
 			ExpRepBarFrame.repBar:SetValue(value)
-			ExpRepBarFrame.xpBar:SetHeight(H - 1)
-			ExpRepBarFrame.restedxpBar:SetHeight(H - 1)
+			ExpRepBarFrame.xpBar:SetHeight(ExpRepBarFrame.height - 1)
+			ExpRepBarFrame.restedxpBar:SetHeight(ExpRepBarFrame.height - 1)
 			ExpRepBarFrame.sep:Show()
 		else
 			if ExpRepBarFrame.repBar:IsShown() then
 				ExpRepBarFrame.repBar:Hide()
 			end
-			ExpRepBarFrame.xpBar:SetHeight(H - 1)
-			ExpRepBarFrame.restedxpBar:SetHeight(H - 1)
+			ExpRepBarFrame.xpBar:SetHeight(ExpRepBarFrame.height - 1)
+			ExpRepBarFrame.restedxpBar:SetHeight(ExpRepBarFrame.height - 1)
 			if ExpRepBarFrame.sep:IsShown() then
 				ExpRepBarFrame.sep:Hide()
 			end
 		end
 
 		ExpRepBarFrame.mouseFrame:SetScript("OnEnter", function()
-			GameTooltip:SetOwner(ExpRepBarFrame.mouseFrame, "ANCHOR_BOTTOMLEFT", -3, H - 1)
+			GameTooltip:SetOwner(ExpRepBarFrame.mouseFrame, "ANCHOR_BOTTOMLEFT", -3, ExpRepBarFrame.height - 1)
 			GameTooltip:ClearLines()
 			GameTooltip:AddLine(PLEVEL.." -> "..PLEVEL + 1, 1, 1, 1)
 			GameTooltip:AddDoubleLine(string.format("%s", GetShortValue(maxXP - XP)), string.format("%s/%s (%d%%)", GetShortValue(XP), GetShortValue(maxXP), (XP / maxXP) * 100), 1, 1, 1, 1, 1, 1)
@@ -139,7 +120,7 @@ local function ShowBars()
 			if GetWatchedFactionInfo() then
 				local name, rank, min, max, value = GetWatchedFactionInfo()
 				GameTooltip:AddLine" "
-				GameTooltip:AddDoubleLine(name, string.format(colorize(rank).."%s|r", FactionInfo[rank][2]), 1, 1, 1, 1, 1, 1)
+				GameTooltip:AddDoubleLine(name, string.format(colorize(rank).."%s|r", factioninfo[rank][2]), 1, 1, 1, 1, 1, 1)
 				GameTooltip:AddDoubleLine(string.format("%s", GetShortValue(max - value)), string.format("%s/%s (%d%%)", GetShortValue(value - min), GetShortValue(max - min), (value - min) / (max - min) * 100), 1, 1, 1, 1, 1, 1)
 			end
 			GameTooltip:Show()
@@ -149,13 +130,13 @@ local function ShowBars()
 	else
 		if GetWatchedFactionInfo() then
 			local name, rank, min, max, value = GetWatchedFactionInfo()
-			ExpRepBarFrame.xpBar:SetStatusBarColor(unpack(FactionInfo[rank][1]))
+			ExpRepBarFrame.xpBar:SetStatusBarColor(unpack(factioninfo[rank][1]))
 			ExpRepBarFrame.xpBar:SetMinMaxValues(min, max)
 			ExpRepBarFrame.xpBar:SetValue(value)
 			ExpRepBarFrame.mouseFrame:SetScript("OnEnter", function()
-				GameTooltip:SetOwner(ExpRepBarFrame.mouseFrame, "ANCHOR_BOTTOMLEFT", -3, H - 1)
+				GameTooltip:SetOwner(ExpRepBarFrame.mouseFrame, "ANCHOR_BOTTOMLEFT", -3, ExpRepBarFrame.height - 1)
 				GameTooltip:ClearLines()
-				GameTooltip:AddDoubleLine(name, string.format(colorize(rank).."%s|r", FactionInfo[rank][2]), 1, 1, 1, 1, 1, 1)
+				GameTooltip:AddDoubleLine(name, string.format(colorize(rank).."%s|r", factioninfo[rank][2]), 1, 1, 1, 1, 1, 1)
 				GameTooltip:AddDoubleLine(string.format("%s", GetShortValue(max-value)), string.format("%s/%s (%d%%)", GetShortValue(value-min), GetShortValue(max - min), (value - min) / (max - min) * 100), 1, 1, 1, 1, 1, 1)
 				GameTooltip:Show()
 			end)
@@ -169,7 +150,7 @@ local function ShowBars()
 	end
 end
 
-local setup = false
+ExpRepBarFrame.setup = false
 ExpRepBarFrame:RegisterEvent"PLAYER_ENTERING_WORLD"
 ExpRepBarFrame:RegisterEvent"PLAYER_LEVEL_UP"
 ExpRepBarFrame:RegisterEvent"PLAYER_XP_UPDATE"
@@ -180,9 +161,9 @@ ExpRepBarFrame:SetScript("OnEvent", function(self, event, ...)
 	if event == "PLAYER_LEVEL_UP" then
 		PLEVEL = PLEVEL + 1
 	end
-	if not setup then
+	if not ExpRepBarFrame.setup then
 		SetupBars()
-		setup = true
+		ExpRepBarFrame.setup = true
 	end
 	ShowBars()
 end)

@@ -2,7 +2,9 @@ if not Load"pvp" then
 	return
 end
 
-local timetil = {
+local PVPCountdownFrame = CreateFrame"Frame"
+PVPCountdownFrame.countDown = 0
+PVPCountdownFrame.timeTill = {
 	[L["1 minute"]] = 62,
 	[L["One minute"]] = 62,
 	[L["60 seconds"]] = 62,
@@ -12,40 +14,35 @@ local timetil = {
 	[L["Thirty seconds"]] = 31,
 	[L["Fifteen seconds"]] = 16,
 }
-
-local countDown = 0
-
-local PVPCountdownFrame = CreateFrame"Frame"
 PVPCountdownFrame:SetScript("OnEvent", function(self, event, msg)
 	self[event](self, event, msg)
 end)
 PVPCountdownFrame:Hide()
-
-local PVPCountdownString = CreateFS(PVPCountdownFrame, 60, "CENTER")
-PVPCountdownString:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-PVPCountdownString:SetTextColor(1, 0, 0)
+PVPCountdownFrame.text = CreateFS(PVPCountdownFrame, 60, "CENTER")
+PVPCountdownFrame.text:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+PVPCountdownFrame.text:SetTextColor(1, 0, 0)
 
 function OnUpdate(self, elapsed)
-	countDown = countDown - elapsed
-	if countDown > 0.1 then
-		PVPCountdownString:SetText(string.format("%."..(1 or 0).."f", countDown))
+	PVPCountdownFrame.countDown = PVPCountdownFrame.countDown - elapsed
+	if PVPCountdownFrame.countDown > 0.1 then
+		PVPCountdownFrame.text:SetText(string.format("%."..(1 or 0).."f", PVPCountdownFrame.countDown))
 	else
-		PVPCountdownString:SetText""
+		PVPCountdownFrame.text:SetText""
 		PVPCountdownFrame:Hide()
 		PVPCountdownFrame:SetScript("OnUpdate", nil)
-		countDown = 0	
+		PVPCountdownFrame.countDown = 0	
 	end
 end
 
 PVPCountdownFrame:RegisterEvent"CHAT_MSG_BG_SYSTEM_NEUTRAL"
 function PVPCountdownFrame:CHAT_MSG_BG_SYSTEM_NEUTRAL(self, msg)
-	for text, duration in pairs(timetil) do
+	for text, duration in pairs(PVPCountdownFrame.timeTill) do
 		if strmatch(strlower(msg), strlower(text)) then
-			countDown = duration
+			PVPCountdownFrame.countDown = duration
 			break
 		end
 	end
-	if countDown > 0 and not PVPCountdownFrame:IsShown() then
+	if PVPCountdownFrame.countDown > 0 and not PVPCountdownFrame:IsShown() then
 		PVPCountdownFrame:Show()
 		PVPCountdownFrame:SetScript("OnUpdate", OnUpdate)
 	end
