@@ -66,22 +66,21 @@ function GetMyColor()
 	return .35, .35, .35, 1
 end
 
-function GetMyPulseColor()
-	return .9, .9, .1
-end
-
 function GetMyTextColor()
 	local r, g, b = GetMyColor()
 	return string.format("|cff%2x%2x%2x", r * 255, g * 255, b * 255)
 end
 
-function dummy() end
-
-function CreateBD(frame, alpha, r, g, b)
-	frame:SetBackdrop(BACKDROP)
-	frame:SetBackdropColor(r or 0, g or 0, b or 0, a or .5)
-	frame:SetBackdropBorderColor(r or 0, g or 0, b or 0)
+function GetMySpecialTextColor()
+	local r, g, b = 0, 1, 1
+	return string.format("|cff%2x%2x%2x", r * 255, g * 255, b * 255)
 end
+
+function GetMyPulseColor()
+	return .9, .9, .1
+end
+
+function dummy() end
 
 function CreateBG(parent, abg, abd, r, g, b)
 	local bg = parent:CreateTexture(nil, "BACKGROUND")

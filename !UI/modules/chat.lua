@@ -52,10 +52,10 @@ local function AddMessage(frame, text, ...)
 	if type(text) == "string" then
 		text = text:gsub("|H(.-)|h%[(.-)%]|h%:?", "|H%1|h%2|h")
 		text = text:gsub("(%d+)%. (.+).+(|Hplayer.+)", channel)
-		text = text:gsub("%s(%a+)://(%S+[^%p%s])", " "..GetMyTextColor().."|Hurl:%1://%2|h%1://%2|h|r")
-		text = text:gsub("%swww%.(%S+[^%p%s])", " "..GetMyTextColor().."|Hurl:www.%1|hwww.%1|h|r")
-		text = text:gsub("%s([%w%-%_%.]+)@([%w%-%_%.]+%a)", " "..GetMyTextColor().."|Hurl:%1@%2|h%1@%2|h|r")
-		text = text:gsub("%s(%d+%.%d+%.%d+%.%d+)(%S*)", " "..GetMyTextColor().."|Hurl:%1%2|h%1%2|h|r")
+		text = text:gsub("%s(%a+)://(%S+[^%p%s])", " "..GetMySpecialTextColor().."|Hurl:%1://%2|h%1://%2|h|r")
+		text = text:gsub("%swww%.(%S+[^%p%s])", " "..GetMySpecialTextColor().."|Hurl:www.%1|hwww.%1|h|r")
+		text = text:gsub("%s([%w%-%_%.]+)@([%w%-%_%.]+%a)", " "..GetMySpecialTextColor().."|Hurl:%1@%2|h%1@%2|h|r")
+		text = text:gsub("%s(%d+%.%d+%.%d+%.%d+)(%S*)", " "..GetMySpecialTextColor().."|Hurl:%1%2|h%1%2|h|r")
 	end
 	return hooks[frame](frame, text, ...)
 end

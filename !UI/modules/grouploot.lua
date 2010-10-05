@@ -6,8 +6,6 @@ UIParent:UnregisterEvent"START_LOOT_ROLL"
 UIParent:UnregisterEvent"CANCEL_LOOT_ROLL"
 
 local GroupLootFrame = CreateFrame("Frame", "GroupLoot", UIParent)
-GroupLootFrame:RegisterEvent"START_LOOT_ROLL"
-GroupLootFrame:SetScript("OnEvent", OnEvent)
 GroupLootFrame:SetPoint("RIGHT", -50, 0)
 GroupLootFrame:SetWidth(200)
 GroupLootFrame:SetHeight(24)
@@ -21,7 +19,7 @@ local function OnEvent(self, event, rollId)
 		RollOnLoot(rollId, canDE and 3 or 2)
 	else
 		tinsert(GroupLootFrame.list, {rollId = rollId})
-		self:UpdateGroupLoot()
+		UpdateGroupLoot()
 	end
 end
 
@@ -35,7 +33,7 @@ local function FrameOnEvent(self, event, rollId)
 		end
 		StaticPopup_Hide("CONFIRM_LOOT_ROLL", self.rollId)
 		self.rollId = nil
-		GroupLoot:UpdateGroupLoot()
+		UpdateGroupLoot()
 	end
 end
 
@@ -68,9 +66,11 @@ local function SortFunc(a, b)
 	return a.rollId < b.rollId
 end
 
-function GroupLootFrame:UpdateGroupLoot()
+function UpdateGroupLoot()
 	sort(GroupLootFrame.list, SortFunc)
-	for index, value in next, GroupLootFrame.frames do value:Hide() end
+	for index, value in next, GroupLootFrame.frames do
+		value:Hide()
+	end
 	local frame
 	for index, value in next, GroupLootFrame.list do
 		frame = GroupLootFrame.frames[index]
@@ -173,3 +173,6 @@ function GroupLootFrame:UpdateGroupLoot()
 		frame:Show()
 	end
 end
+
+GroupLootFrame:RegisterEvent"START_LOOT_ROLL"
+GroupLootFrame:SetScript("OnEvent", OnEvent)

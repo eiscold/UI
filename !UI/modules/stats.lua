@@ -14,7 +14,7 @@ StatsFrame:SetHeight(20)
 StatsFrame:SetWidth(80)
 
 local function SortOrder(a, b)
-	return a.StatsFrame.memory > b.StatsFrame.memory
+	return a.memory > b.memory
 end
 
 local function OnEnter()
