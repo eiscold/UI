@@ -1,4 +1,6 @@
 if L.locale == "enUS" then
+	L["Install"] = "Install"
+
 -- zones, localization needed
 	L["Dalaran"] = "Dalaran"
 	L["Krasus"] = "Krasus"

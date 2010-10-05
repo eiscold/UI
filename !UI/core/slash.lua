@@ -105,7 +105,8 @@ SLASH_MOBSTOLVLUP1 = "/mobstolvlup"
 SLASH_MOBSTOLVLUP2 = "/mtl"
 
 SlashCmdList.SETUP = function()
-	EnableAddOn"!Setup" LoadAddOn"!Setup"
+	EnableAddOn"!Setup"
+	LoadAddOn"!Setup"
 end
 SLASH_SETUP1 = "/setup"
 

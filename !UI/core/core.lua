@@ -72,12 +72,12 @@ function GetMyTextColor()
 end
 
 function GetMySpecialTextColor()
-	local r, g, b = 0, 1, 1
+	local r, g, b = .3, .3, .9
 	return string.format("|cff%2x%2x%2x", r * 255, g * 255, b * 255)
 end
 
 function GetMyPulseColor()
-	return .9, .9, .1
+	return 1, 1, 1
 end
 
 function dummy() end
@@ -97,13 +97,13 @@ function CreateBG(parent, abg, abd, r, g, b)
 end
 
 function CreateFS(parent, size, justify, style)
-    local f = parent:CreateFontString(nil, "OVERLAY")
-    f:SetFont(FONT, size or FONT_SIZE, style or "OUTLINE")
-    f:SetShadowColor(0, 0, 0, 0)
+    local font = parent:CreateFontString(nil, "OVERLAY")
+    font:SetFont(FONT, size or FONT_SIZE, style or "OUTLINE")
+    font:SetShadowColor(0, 0, 0, 0)
     if justify then
-		f:SetJustifyH(justify)
+		font:SetJustifyH(justify)
 	end
-    return f
+    return font
 end
 
 function CreatePulse(frame, low, high, speed, mult, alpha)
@@ -134,6 +134,36 @@ function CreatePulse(frame, low, high, speed, mult, alpha)
 		elseif self.pulse.alpha > 1 and self.pulse.mult < 0 then
 			self.pulse.mult = self.pulse.mult * -1
 		end
+	end)
+end
+
+function CreatePulseBG(frame, type)
+	frame.glow = CreateFrame("Frame", nil, frame)
+	frame.glow:SetBackdrop(BACKDROP)
+	frame.glow:SetPoint("TOPLEFT", frame, -5, 5)
+	frame.glow:SetPoint("BOTTOMRIGHT", frame, 5, -5)
+	frame.glow:SetBackdropBorderColor(GetMyPulseColor())
+	frame.glow:SetAlpha(0)
+	if type == "button" then
+		frame:SetNormalTexture""
+		frame:SetHighlightTexture""
+		frame:SetPushedTexture""
+		frame:SetDisabledTexture""
+	end
+	frame.bg, frame.bd = CreateBG(frame, 0, .3)
+	frame.bg:SetTexture(1, 1, 1, .1)
+	frame.bd:SetBackdropColor(1, 1, 1, 1)
+	frame.bd:SetBackdropBorderColor(1, 1, 1, 1)
+	frame:HookScript("OnEnter", function(self)
+		self:SetBackdropBorderColor(1, 1, 1)
+		self:SetBackdropColor(1, 1, 1 ,.1)
+		CreatePulse(self.glow)
+	end)
+ 	frame:HookScript("OnLeave", function(self)
+		self:SetBackdropBorderColor(0, 0, 0)
+		self:SetBackdropColor(0, 0, 0, .25)
+		self.glow:SetScript("OnUpdate", nil)
+		self.glow:SetAlpha(0)
 	end)
 end
 

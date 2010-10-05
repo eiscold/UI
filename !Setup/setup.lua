@@ -50,71 +50,61 @@ local function SetupUI()
 	for i, v in ipairs(channels) do
 		ToggleChatColorNamesByClassGroup(true, v)
 	end
-
-	StaticPopup_Show"RELOAD_UI"
 end
 
-StaticPopupDialogs["CONFIGURE_UI"] = {
-	text = "Configure !UI?",
-	button1 = YES,
-	button2 = NO,
-	OnAccept = SetupUI,
-	timeout = 0,
-	whileDead = 1,
-	hideOnEscape = true,
-}
+local SetupFrame = CreateFrame"Frame"
+SetupFrame:SetWidth(320)
+SetupFrame:SetHeight(SetupFrame:GetWidth() * GetScreenHeight() / GetScreenWidth())
+SetupFrame:SetScale(768 / string.match(({GetScreenResolutions()})[GetCurrentResolution()], "%d+x(%d+)"))
+SetupFrame:SetPoint("CENTER", UIParent, "CENTER")
+CreateBG(SetupFrame, .7)
 
-StaticPopupDialogs["RELOAD_UI"] = {
-	text = "Configuration of !UI finished. Reload?",
-	button1 = YES,
-	button2 = NO,
-	OnAccept = ReloadUI,
-	timeout = 0,
-	whileDead = 1,
-	hideOnEscape = true,
-}
+SetupFrame.Title = CreateFS(SetupFrame, 36, "CENTER")
+SetupFrame.Title:SetText(UI_NAME)
+SetupFrame.Title:SetPoint("CENTER", SetupFrame, "CENTER", 0, 30)
 
-local LoadFrame = CreateFrame"Frame"
-LoadFrame:SetWidth(320)
-LoadFrame:SetHeight(200)
-LoadFrame:SetScale(768 / string.match(({GetScreenResolutions()})[GetCurrentResolution()], "%d+x(%d+)"))
-LoadFrame:SetScale(UIParent:GetScale())
-LoadFrame:SetPoint("CENTER", UIParent, "CENTER")
-CreateBG(LoadFrame)
+SetupFrame.Version = CreateFS(SetupFrame, FONT_SIZE, "CENTER")
+SetupFrame.Version:SetText(UI_VERSION)
+SetupFrame.Version:SetPoint("TOP", SetupFrame.Title, "BOTTOM")
 
-LoadFrame.Text = CreateFS(LoadFrame, FONT_SIZE, "CENTER")
-LoadFrame.Text:SetText(UI_NAME.." "..UI_VERSION.." by "..UI_AUTHOR)
-LoadFrame.Text:SetPoint("CENTER", LoadFrame, "CENTER")
+SetupFrame.Author = CreateFS(SetupFrame, 10, "CENTER")
+SetupFrame.Author:SetText(UI_AUTHOR)
+SetupFrame.Author:SetPoint("BOTTOM", SetupFrame, "BOTTOM", 0, 1)
+SetupFrame.Author:SetTextColor(1, 1, 1, .3)
 
-LoadFrame.Button1 = CreateFrame("Button", nil, LoadFrame)
-LoadFrame.Button1:SetWidth(80)
-LoadFrame.Button1:SetHeight(12)
-LoadFrame.Button1:SetPoint("BOTTOMLEFT", LoadFrame, "BOTTOMLEFT", 10, 10)
-LoadFrame.Button1:RegisterForClicks"LeftButtonUp"
-LoadFrame.Button1:SetText"Yes"	
-
-LoadFrame.Button2 = CreateFrame("Button", nil, LoadFrame)
-LoadFrame.Button2:SetWidth(80)
-LoadFrame.Button2:SetHeight(12)
-LoadFrame.Button2:SetPoint("BOTTOMRIGHT", LoadFrame, "BOTTOMRIGHT", -10, 10)
-LoadFrame.Button2:RegisterForClicks"LeftButtonUp"
-LoadFrame.Button2:SetText"No"
-
---[[
-LoadFrame.upTime = 6
-
-UIParent:SetAlpha(0)
-
-LoadFrame:SetScript("OnUpdate", function(self, elapsed)
-	self.upTime = self.upTime - elapsed
-	if self.upTime <= 0 then
-		self:Hide()
-		UIParent:SetAlpha(1)	
-		self:SetScript("OnUpdate", nil)
-	end
+SetupFrame.Button1 = CreateFrame("Button", nil, SetupFrame, "UIPanelButtonTemplate")
+SetupFrame.Button1:SetWidth(100)
+SetupFrame.Button1:SetHeight(20)
+SetupFrame.Button1:SetPoint("BOTTOMRIGHT", SetupFrame, "BOTTOM", -10, 50)
+SetupFrame.Button1:RegisterForClicks"LeftButtonUp"
+SetupFrame.Button1.Font = CreateFS(SetupFrame.Button1, 12)
+SetupFrame.Button1.Font:SetTextColor(1, 1, 1)
+SetupFrame.Button1:SetFontString(SetupFrame.Button1.Font)
+SetupFrame.Button1:SetText(L["Install"])
+CreatePulseBG(SetupFrame.Button1, "button")
+SetupFrame.Button1:SetScript("OnClick", function(self, button, down)
+	SetupUI()
+	UIParent:SetAlpha(1)
+	SetupFrame:Hide()
+	ReloadUI()
+	DisableAddOn"!Setup"
 end)
 
-StaticPopup_Show"CONFIGURE_UI"
-]]
+SetupFrame.Button2 = CreateFrame("Button", nil, SetupFrame, "UIPanelButtonTemplate")
+SetupFrame.Button2:SetWidth(100)
+SetupFrame.Button2:SetHeight(20)
+SetupFrame.Button2:SetPoint("BOTTOMLEFT", SetupFrame, "BOTTOM", 10, 50)
+SetupFrame.Button2:RegisterForClicks"LeftButtonUp"
+SetupFrame.Button2.Font = CreateFS(SetupFrame.Button2, 12)
+SetupFrame.Button2.Font:SetTextColor(1, 1, 1)
+SetupFrame.Button2:SetFontString(SetupFrame.Button2.Font)
+SetupFrame.Button2:SetText(CANCEL)
+CreatePulseBG(SetupFrame.Button2, "button")
+SetupFrame.Button2:SetScript("OnClick", function(self, button, down)
+	UIParent:SetAlpha(1)
+	SetupFrame:Hide()
+	DisableAddOn"!Setup"
+end)
 
-DisableAddOn"!Setup"
+UIParent:SetAlpha(0)
+SetupFrame:Show()
