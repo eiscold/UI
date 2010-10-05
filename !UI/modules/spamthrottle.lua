@@ -4,7 +4,7 @@ end
 
 local SpamThrottleFrame = CreateFrame"Frame"
 
-SpamThrottleFrame.mode = 1 -- 1 = color, 2 = hide
+SpamThrottleFrame.mode = 2 -- 1 = color, 2 = hide
 SpamThrottleFrame.color = "|cFF5C5C5C"
 SpamThrottleFrame.gap = 120
 SpamThrottleFrame.fuzzy = 1

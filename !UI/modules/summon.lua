@@ -11,15 +11,12 @@ SummonFrame:Hide()
 SummonFrame:SetScript("OnEvent",
 	function(self, event, ...) self[event](self, event, ...)
 end)
-SummonFrame.pulseFrame = CreateFrame("Frame", nil, UIParent)
-SummonFrame.pulseFrame:SetHeight(15)
-SummonFrame.pulseFrame:SetWidth(SummonFrame:GetWidth())
-SummonFrame.pulseFrame:SetPoint("CENTER", SummonFrame, "CENTER")
-SummonFrame.pulseFrame:SetFrameStrata"BACKGROUND"
-SummonFrame.pulseFrame.bg, SummonFrame.pulseFrame.bd = CreateBG(SummonFrame.pulseFrame, .7)
-SummonFrame.pulseFrame.bd:Hide()
-SummonFrame.pulseFrame.bg:SetTexture(.9, .1, .1)
-SummonFrame.pulseFrame:Hide()
+SummonFrame.glow = CreateFrame("Frame", nil, SummonFrame)
+SummonFrame.glow:SetBackdrop(BACKDROP)
+SummonFrame.glow:SetPoint("TOPLEFT", SummonFrame, -5, 5)
+SummonFrame.glow:SetPoint("BOTTOMRIGHT", SummonFrame, 5, -5)
+SummonFrame.glow:SetBackdropBorderColor(GetMyPulseColor())
+SummonFrame.glow:SetAlpha(0)
 SummonFrame.timer = CreateFS(SummonFrame, 12, "RIGHT")
 SummonFrame.timer:SetPoint("TOPLEFT", SummonFrame, "TOPLEFT")
 SummonFrame.timer:SetPoint("TOPRIGHT", SummonFrame, "TOPRIGHT")
@@ -37,10 +34,6 @@ local function Accept()
 	else
 		AcceptBattlefieldPort(SummonFrame.battleground, true)
 	end
-end
-
-local function Cancel()
-	CancelSummon()
 end
 
 function Update(self, elapsed)
@@ -82,7 +75,9 @@ function SummonFrame:CONFIRM_SUMMON(self, ...)
 	SummonFrame.location:SetText(GetSummonConfirmAreaName())
 	print(format(L["SummonNew"], SummonFrame.summoner:GetText(), SummonFrame.location:GetText()))
 	SummonFrame:Show()
-	SummonFrame:SetScript("OnUpdate", function(...) Update(...) end)
+	SummonFrame:SetScript("OnUpdate", function(...)
+		Update(...)
+	end)
 end
 
 SummonFrame:RegisterEvent"UPDATE_BATTLEFIELD_STATUS"
@@ -109,19 +104,19 @@ SummonFrame:SetScript("OnClick", function(self, button, down)
 		SummonFrame.pending = false
 		SummonFrame:SetScript("OnUpdate", nil)
 	elseif button == "RightButton" and SummonFrame.pending then
-		Cancel()
+		CancelSummon()
 		SummonFrame:Hide()
 		SummonFrame.pending = false
 		SummonFrame:SetScript("OnUpdate", nil)
 	end
 end)
 
-SummonFrame:SetScript("OnShow", function(self, event, ...)
-	SummonFrame.pulseFrame:Show()
-	CreatePulse(SummonFrame.pulseFrame)
+SummonFrame:SetScript("OnShow", function(self)
+	SummonFrame.glow:SetAlpha(1)
+	CreatePulse(SummonFrame.glow)
 end)
 
-SummonFrame:SetScript("OnHide", function(self, event, ...)
-	DestroyPulse(SummonFrame.pulseFrame)
-	SummonFrame.pulseFrame:Hide()
+SummonFrame:SetScript("OnHide", function(self)
+	SummonFrame.glow:SetScript("OnUpdate", nil)
+	SummonFrame.glow:SetAlpha(0)
 end)

@@ -156,6 +156,21 @@ local function SharedUnitFramesFunc(self, unit)
 	self:RegisterEvent("UNIT_NAME", updateName)
 	tinsert(self.__elements, updateName)
 
+	self.Glow = CreateFrame("Frame", nil, self)
+	self.Glow:SetBackdrop(BACKDROP)
+	self.Glow:SetPoint("TOPLEFT", self, -5, 5)
+	self.Glow:SetPoint("BOTTOMRIGHT", self, 5, -5)
+	self.Glow:SetBackdropBorderColor(GetMyPulseColor())
+	self.Glow:SetAlpha(0)
+	self:HookScript("OnEnter", function(self)
+		self.Glow:SetAlpha(1)
+		CreatePulse(self.Glow)
+	end)
+	self:HookScript("OnLeave", function(self)
+		self.Glow:SetScript("OnUpdate", nil)
+		self.Glow:SetAlpha(0)
+	end)
+
 	if unit == "player" then
 		width, height = 229, 16
 

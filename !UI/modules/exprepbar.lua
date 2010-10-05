@@ -17,39 +17,35 @@ local function SetupBars()
 	ExpRepBarFrame.backdrop:SetWidth(ExpRepBarFrame.width)
 	ExpRepBarFrame.backdrop:SetPoint("LEFT", Minimap, "RIGHT", 6, 0)
 	CreateBG(ExpRepBarFrame.backdrop, .7)
-	ExpRepBarFrame.backdrop:SetBackdrop(BACKDROP)
-	ExpRepBarFrame.backdrop:SetBackdropColor(0, 0, 0, .7)
-	ExpRepBarFrame.backdrop:SetBackdropBorderColor(0, 0, 0)
-	ExpRepBarFrame.backdrop:SetFrameLevel(0)
 	
 	ExpRepBarFrame.xpBar = CreateFrame("StatusBar", nil, ExpRepBarFrame, "TextStatusBar")
-	ExpRepBarFrame.xpBar:SetWidth(ExpRepBarFrame.width - 1)
-	ExpRepBarFrame.xpBar:SetHeight(ExpRepBarFrame.height - 1)
-	ExpRepBarFrame.xpBar:SetPoint("TOP", ExpRepBarFrame.backdrop, "TOP", 0, -1)
+	ExpRepBarFrame.xpBar:SetWidth(ExpRepBarFrame.width)
+	ExpRepBarFrame.xpBar:SetHeight(ExpRepBarFrame.height)
+	ExpRepBarFrame.xpBar:SetPoint("TOP", ExpRepBarFrame.backdrop, "TOP")
 	ExpRepBarFrame.xpBar:SetStatusBarTexture(TEXTURE)
 	ExpRepBarFrame.xpBar:SetOrientation"VERTICAL"
 	ExpRepBarFrame.xpBar:SetFrameLevel(2)
 	
 	ExpRepBarFrame.restedxpBar = CreateFrame("StatusBar", nil, ExpRepBarFrame, "TextStatusBar")
-	ExpRepBarFrame.restedxpBar:SetWidth(ExpRepBarFrame.width - 1)
-	ExpRepBarFrame.restedxpBar:SetHeight(ExpRepBarFrame.height - 1)
-	ExpRepBarFrame.restedxpBar:SetPoint("TOP", ExpRepBarFrame.backdrop,"TOP", 0, -1)
+	ExpRepBarFrame.restedxpBar:SetWidth(ExpRepBarFrame.width)
+	ExpRepBarFrame.restedxpBar:SetHeight(ExpRepBarFrame.height)
+	ExpRepBarFrame.restedxpBar:SetPoint("TOP", ExpRepBarFrame.backdrop,"TOP")
 	ExpRepBarFrame.restedxpBar:SetStatusBarTexture(TEXTURE)
 	ExpRepBarFrame.restedxpBar:SetFrameLevel(1)
 	ExpRepBarFrame.restedxpBar:SetOrientation"VERTICAL"
 	ExpRepBarFrame.restedxpBar:Hide()
 	
 	ExpRepBarFrame.repBar = CreateFrame("StatusBar", nil, ExpRepBarFrame, "TextStatusBar")
-	ExpRepBarFrame.repBar:SetWidth(ExpRepBarFrame.width - 1)
+	ExpRepBarFrame.repBar:SetWidth(ExpRepBarFrame.width)
 	ExpRepBarFrame.repBar:SetHeight(1)
-	ExpRepBarFrame.repBar:SetPoint("TOP", ExpRepBarFrame.xpBar, "BOTTOM", 0, 0)
+	ExpRepBarFrame.repBar:SetPoint("TOP", ExpRepBarFrame.xpBar, "BOTTOM")
 	ExpRepBarFrame.repBar:SetStatusBarTexture(TEXTURE)
 	ExpRepBarFrame.repBar:SetFrameLevel(1)
 	ExpRepBarFrame.repBar:SetOrientation"VERTICAL"
 	ExpRepBarFrame.repBar:Hide()
 
 	ExpRepBarFrame.sep = CreateFrame("Frame", nil, ExpRepBarFrame)
-	ExpRepBarFrame.sep:SetWidth(ExpRepBarFrame.width - 1)
+	ExpRepBarFrame.sep:SetWidth(ExpRepBarFrame.width)
 	ExpRepBarFrame.sep:SetHeight(1)
 	ExpRepBarFrame.sep:SetPoint("TOP", ExpRepBarFrame.xpBar, "BOTTOM")
 	ExpRepBarFrame.sep:SetBackdrop({
@@ -95,22 +91,18 @@ local function ShowBars()
 			ExpRepBarFrame.repBar:SetStatusBarColor(unpack(factioninfo[rank][1]))
 			ExpRepBarFrame.repBar:SetMinMaxValues(min, max)
 			ExpRepBarFrame.repBar:SetValue(value)
-			ExpRepBarFrame.xpBar:SetHeight(ExpRepBarFrame.height - 1)
-			ExpRepBarFrame.restedxpBar:SetHeight(ExpRepBarFrame.height - 1)
 			ExpRepBarFrame.sep:Show()
 		else
 			if ExpRepBarFrame.repBar:IsShown() then
 				ExpRepBarFrame.repBar:Hide()
 			end
-			ExpRepBarFrame.xpBar:SetHeight(ExpRepBarFrame.height - 1)
-			ExpRepBarFrame.restedxpBar:SetHeight(ExpRepBarFrame.height - 1)
 			if ExpRepBarFrame.sep:IsShown() then
 				ExpRepBarFrame.sep:Hide()
 			end
 		end
 
 		ExpRepBarFrame.mouseFrame:SetScript("OnEnter", function()
-			GameTooltip:SetOwner(ExpRepBarFrame.mouseFrame, "ANCHOR_BOTTOMLEFT", -3, ExpRepBarFrame.height - 1)
+			GameTooltip:SetOwner(ExpRepBarFrame.mouseFrame, "ANCHOR_BOTTOMLEFT", -3, ExpRepBarFrame.height)
 			GameTooltip:ClearLines()
 			GameTooltip:AddLine(PLEVEL.." -> "..PLEVEL + 1, 1, 1, 1)
 			GameTooltip:AddDoubleLine(string.format("%s", GetShortValue(maxXP - XP)), string.format("%s/%s (%d%%)", GetShortValue(XP), GetShortValue(maxXP), (XP / maxXP) * 100), 1, 1, 1, 1, 1, 1)

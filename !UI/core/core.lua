@@ -66,6 +66,10 @@ function GetMyColor()
 	return .35, .35, .35, 1
 end
 
+function GetMyPulseColor()
+	return .9, .9, .1
+end
+
 function GetMyTextColor()
 	local r, g, b = GetMyColor()
 	return string.format("|cff%2x%2x%2x", r * 255, g * 255, b * 255)

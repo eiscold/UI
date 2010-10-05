@@ -85,27 +85,16 @@ function Show(name, entry)
 end
 
 function AddMouseOver(frame, name, entry)
-	entry.hover.oldOnEnter = frame.OnEnter or dummy
-	entry.hover.oldOnLeave = frame.OnLeave or dummy
-	frame:SetScript("OnEnter", function(self, ...)
+	frame:HookScript("OnEnter", function(self, ...)
 		FadeFrame.MouseOver[self:GetName()] = true
-		entry.hover.oldOnEnter(self, ...)
 		Show(name, entry)
 	end)
-	frame:SetScript("OnLeave", function(self, ...)
+	frame:HookScript("OnLeave", function(self, ...)
 		FadeFrame.MouseOver[self:GetName()] = false
-		entry.hover.oldOnLeave(self, ...)
 		if not Pending"player" then
 			Hide(name, entry)
 		end
 	end)
-end
-
-function DelMouseOver(frame, entry)
-	frame:SetScript("OnEnter", entry.hover.oldOnEnter)
-	frame:SetScript("OnLeave", entry.hover.oldOnLeave)
-	entry.hover.oldOnEnter = nil
-	entry.hover.oldOnLeave = nil
 end
 
 function Pending(unit, cond)
