@@ -47,7 +47,6 @@ local function SetupUI()
 		"CHANNEL4",
 		"CHANNEL5",
 	}
-	
 	for i, v in ipairs(channels) do
 		ToggleChatColorNamesByClassGroup(true, v)
 	end
