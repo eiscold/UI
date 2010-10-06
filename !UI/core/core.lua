@@ -63,7 +63,7 @@ factioninfo = {
 
 function GetMyColor()
 	--return .35, .55, .55
-	return .35, .35, .35, 1
+	return .5, .5, .5, 1
 end
 
 function GetMyTextColor()

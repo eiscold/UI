@@ -16,7 +16,7 @@ for i = 1, 3 do
 	_G["MirrorTimer"..i.."Text"]:ClearAllPoints()
 	_G["MirrorTimer"..i.."Text"]:SetPoint("CENTER", _G["MirrorTimer"..i.."StatusBar"], "CENTER")
 	_G["MirrorTimer"..i.."StatusBar"]:ClearAllPoints()
-	_G["MirrorTimer"..i.."StatusBar"]:SetAllPoints(bar)
+	_G["MirrorTimer"..i.."StatusBar"]:SetAllPoints(_G["MirrorTimer"..i])
 end
 
 hooksecurefunc("MirrorTimer_Show", function()
