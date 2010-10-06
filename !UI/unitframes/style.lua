@@ -80,6 +80,8 @@ function extendUnitFrame(self)
 	self.bg:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, -8)
 	self.bd:SetPoint("TOPLEFT", self, "TOPLEFT", -5, 5)
 	self.bd:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 5, -13)
+	self.Glow:SetPoint("TOPLEFT", self, -5, 5)
+	self.Glow:SetPoint("BOTTOMRIGHT", self, 5, -13)
 end
 
 function shrinkUnitFrame(self)
@@ -87,6 +89,8 @@ function shrinkUnitFrame(self)
 	self.bg:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT")
 	self.bd:SetPoint("TOPLEFT", self, "TOPLEFT", -5, 5)
 	self.bd:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 5, -5)
+	self.Glow:SetPoint("TOPLEFT", self, -5, 5)
+	self.Glow:SetPoint("BOTTOMRIGHT", self, 5, -5)
 end
 
 _G["BuffFrame"]:Hide()

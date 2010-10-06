@@ -2,161 +2,219 @@ if not Load"filter" then
 	return
 end
 
-local Spells = {
-
-    ["DEATHKNIGHT"] = {
-    -- Frost Fever
-    {spellId = 55095, size = 32, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 132, 0}},
-    -- Blood Plague
-    {spellId = 55078, size = 32, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 169, 0}},
+local Filter = {}
+Filter.y = 60
+Filter.position = {
+	[1] = {"BOTTOMRIGHT", ufTarget, "TOP", -80.5, Filter.y},
+	[2] = {"BOTTOMRIGHT", ufTarget, "TOP", -41.5, Filter.y},
+	[3] = {"BOTTOMRIGHT", ufTarget, "TOP", -2.5, Filter.y},
+	[4] = {"BOTTOMLEFT", ufTarget, "TOP", 2.5, Filter.y},
+	[5] = {"BOTTOMLEFT", ufTarget, "TOP", 41.5, Filter.y},
+	[6] = {"BOTTOMLEFT", ufTarget, "TOP", 80.5, Filter.y},
+}
+Filter.spells = {
+	["DEATHKNIGHT"] = {
     -- Ebon Plague
-    {spellId = 51726, size = 32, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 206, 0}},
+    {spellId = 51735, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[3]},
+    -- Frost Fever
+    {spellId = 55095, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[1]},
+    -- Blood Plague
+    {spellId = 55078, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[2]},
     -- Unholy Blight
-    {spellId = 50536, size = 32, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 243, 0}},
-    },
-    
-    
-    ["DRUID"] = {    -- Insect Swarm
-    {spellId = 27013, size = 32, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 243, 0}},
+    {spellId = 50536, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[5]},
+	-- Killing Machine
+	{spellId = 51124, size = 34, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[4]},
+	-- Rime (Freezing Fog)
+	{spellId = 59052, size = 34, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[4]},
+	-- Desolation
+	{spellId = 66803, size = 34, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[4]},
+	-- Icebond Fortitude
+	{spellId = 48792, size = 34, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[5]},
+	-- Vampiric Blood, Unbreakable Armor, Bone Shield 
+	{spellId = 55233, spellId2 = 51271, spellId3 = 49222, size = 34, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[6]},
+	-- Anti-magic shield and zone
+	{spellId = 48707, spellId2 = 50461, size = 34, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[6]},
+	},
+
+    ["DRUID"] = {
+    -- Insect Swarm
+	{spellId = 27013, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[5]},
     -- Moonfire
-    {spellId = 26988, size = 32, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 280, 0}},
+    {spellId = 26988, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[4]},
     -- Entangling Roots
-    {spellId = 26989, size = 32, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 317, 0}},
-    -- Earth and Moon
-     {spellId = 48511, size = 32, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 132, 0}},
+    {spellId = 26989, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[6]},
+    -- Earth and Moon, Ebon Plague, CoE
+    {spellId = 48511, spellId2 = 51735, spellId3 = 47865, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[3]},
     -- Eclipse
-     {spellId = 48525, size = 64, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = {"LEFT", UIParent, "CENTER", 85, -80}},
+    {spellId = 48525, size = 34, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[1]},
+	-- Lacerate
+    {spellId = 48568, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[2]},
+    -- Rake
+    {spellId = 48574, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[3]},
+    -- Rip
+    {spellId = 49800, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[4]},
+    -- Mangle
+    {spellId = 48566, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[5]},
+    -- Barkskin
+    {spellId = 22812, size = 34, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[1]},
+    -- Survival Instincts
+    {spellId = 61336, size = 34, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[3]},
+    -- Savage roar
+    {spellId = 52610, size = 34, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[1]},
     },
-    
-    
-    ["HUNTER"] = { -- by haylie from wowinterface.com
+
+    ["HUNTER"] = {
     -- Hunter's Mark
-    {spellId = 53338, size = 32, unitId = "target", isMine = "all", filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 206, 0}},
+    {spellId = 53338, size = 34, unitId = "target", isMine = "all", filter = "HARMFUL", setPoint = Filter.position[1]},
     -- Serpent Sting
-    {spellId = 49001, size = 32, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 243, 0}},
+    {spellId = 49001, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[6]},
     -- Black Arrow
-    {spellId = 63672, size = 32, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 280, 0}},
+    {spellId = 63672, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[5]},
     -- Explosive Shot DoT
-    {spellId = 60053, size = 32, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 317, 0}},
+    {spellId = 60053, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[2]},
     -- Lock and Load
-    {spellId = 56453, size = 64, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = {"LEFT", UIParent, "CENTER", 85, 0}},
+    {spellId = 56453, size = 34, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[3]},
     -- Aspect of the Viper
-    {spellId = 34074, size = 64, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = {"LEFT", UIParent, "CENTER", 85, 70}},
+    {spellId = 34074, size = 34, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[4]},
     },
-    
-    
-    ["MAGE"] = {-- by Zaben from wowinterface.com
+
+    ["MAGE"] = {
     -- Living Bomb
-    {spellId = 55360, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = {"BOTTOMLEFT", ufTarget, "TOP", 2.5, 60}},
-	-- Clear Casting
-    {spellId = 12536, size = 34, unitId = "player", isMine = all, filter = "HELPFUL", setPoint = {"BOTTOMLEFT", ufTarget, "TOP", 2.5, 60}},
-
-	-- Fingers of Frost (Frost), Missile Barrage (Arcane), Hot Streak (Fire)
-    {spellId = 44545, spellId2 = 54490, spellId3 = 44448, size = 34, unitId = "player", isMine = all, filter = "HELPFUL", setPoint = {"BOTTOMRIGHT", ufTarget, "TOP", -2.5, 60}},
-	
-	-- Fireball! 
-    {spellId = 57761, size = 34, unitId = "player", isMine = "all", filter = "HELPFULL", setPoint = {"BOTTOMRIGHT", ufTarget, "TOP", -80.5, 60}},
-	-- Impact
-    {spellId = 12358, size = 34, unitId = "target", isMine = "1", filter = "HARMFUL", setPoint = {"BOTTOMRIGHT", ufTarget, "TOP", -80.5, 60}},
-	-- Polymorph - Sheep, Pig, Turkey, Black Cat, Rabbit, Turtle, 
-    {spellId = 12826, spellId2 = 28272, spellId3 = 61780, spellId4 = 61305, spellId5 = 61721, spellId6 = 28271, size = 34, unitId = "target", isMine = "1", filter = "HARMFUL", setPoint = {"BOTTOMRIGHT", ufTarget, "TOP", -80.5, 60}},
-
-	-- Fiery Payback (Rank 1 and 2) 44440
-    {spellId = 44442, spellId2 = 44443, size = 34, unitId = "player", isMine = "all", filter = "HELPFUL", setPoint = {"BOTTOMLEFT", ufTarget, "TOP", 80.5, 60}},
-	-- Arcane Blast debuff 
-    {spellId = 36032, size = 32, unitId = "player", isMine = "all", filter = "HARMFUL", setPoint = {"BOTTOMLEFT", ufTarget, "TOP", 80.5, 60}},
-	
-	-- Spell Crit - Winter's Chill (Frost), Improved Scorch (Fire)
-    {spellId = 28593, spellId2 = 22959, size = 34, unitId = "target", isMine = "1", filter = "HARMFUL", setPoint = {"BOTTOMRIGHT", ufTarget, "TOP", -41.5, 60}},
-   
+    {spellId = 55360, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[4]},
+    -- Fingers of Frost (Frost), Missile Barrage (Arcane), Hot Streak (Fire)
+    {spellId = 44545, spellId2 = 54490, spellId3 = 44448, size = 34, unitId = "player", isMine = all, filter = "HELPFUL", setPoint = Filter.position[3]},
+    -- Fireball! 
+    {spellId = 57761, size = 34, unitId = "player", isMine = "all", filter = "HELPFULL", setPoint = Filter.position[6]},
+    -- Clear Casting
+    {spellId = 12536, size = 34, unitId = "player", isMine = all, filter = "HELPFUL", setPoint = Filter.position[4]},
+    -- Fiery Payback (Rank 1 and 2)
+    {spellId = 44440, spellId2 = 44441, size = 34, unitId = "player", isMine = "all", filter = "HELPFULL", setPoint = Filter.position[6]},
+    -- Impact
+    {spellId = 12358, size = 34, unitId = "target", isMine = "1", filter = "HARMFUL", setPoint = Filter.position[1]},
+    -- Arcane Blast debuff 
+    {spellId = 36032, size = 34, unitId = "player", isMine = "all", filter = "HARMFUL", setPoint = Filter.position[4]},
+    -- Spell Crit - Winter's Chill (Frost), Improved Scorch (Fire)
+    {spellId = 28593, spellId2 = 22959, size = 34, unitId = "target", isMine = "1", filter = "HARMFUL", setPoint = Filter.position[2]},  
+    -- Polymorph - Sheep, Pig, Turkey, Black Cat, Rabbit, Turtle, 
+    {spellId = 12826, spellId2 = 28272, spellId3 = 61780, spellId4 = 61305, spellId5 = 61721, spellId6 = 28271, size = 34, unitId = "target", isMine = "1", filter = "HARMFUL", setPoint = Filter.position[1]},
     -- Slow (Arcane), Ignite (Fire), Frostbite (Frost)
-    {spellId = 31589, spellId2 = 12848, spellId3 = 12497, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = {"BOTTOMLEFT", ufTarget, "TOP", 41.5, 60}},
+    {spellId = 31589, spellId2 = 12848, spellId3 = 12497, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[5]},
     },
 
-    
     ["PALADIN"] = {
-    },
-    
-    
+    -- Art of War
+    {spellId = 53488, size = 34, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[1]},
+    -- Vengeance
+    {spellId = 20053, spellId = 20052, spellId = 20050, size = 34, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[3]},
+    -- Holy Shield
+    {spellId = 20927, spellId = 20928, spellId = 27179, spellId = 48951, spellId = 48952, spellId = 20925, size = 34, unitId = "player", isMine = "all", filter = "HELPFUL", setPoint = Filter.position[1]},
+	-- Lights Grace
+	{spellId = 31836 , size = 34, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[3]},
+    -- Divine Plea
+	{spellId = 54428 , size = 34, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[4]},
+    -- Forbearance
+	{spellId = 25771, size = 34, unitId = "player", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[2]},
+    -- Attack speed debuff: warrior clap, feral wounds, dk frost fever, shamans earth shock, prot paladins judgment
+    {spellId = 6343, spellId2 = 48485, spellId3 = 55095, spellId4 = 49231, spellId5 = 53696,  size = 34, unitId = "target", isMine = "all", filter = "HARMFUL", setPoint = Filter.position[5]},
+    -- Attack power debuff: warrior shout, druid roar, lock curse, paladins vindication
+    {spellId = 1160, spellId2 = 48560, spellId3 = 50511, spellId4 = 26017, size = 34, unitId = "target", isMine = "all", filter = "HARMFUL", setPoint = Filter.position[6]},
+ 	},
+
     ["PRIEST"] = {
-    -- Inner Fire
-    {spellId = 48168, size = 32, unitId = "player", isMine = "all", filter = "HELPFUL", setPoint = {"CENTER", UIParent, "CENTER", 132, 37}},
     -- PW:Shield on self
-    {spellId = 48066, size = 32, unitId = "player", isMine = "all", filter = "HELPFUL", setPoint = {"CENTER", UIParent, "CENTER", 169, 37}},
+    {spellId = 48066, size = 34, unitId = "player", isMine = "all", filter = "HELPFUL", setPoint = Filter.position[1]},
+	-- Serendipity, Holy Concentration
+	{spellId = 63734, spellId2 = 63725, size = 34, unitId = "player", isMine = "all", filter = "HELPFUL", setPoint = Filter.position[4]},
     -- Renew on target
-    {spellId = 25222, size = 32, unitId = "target", isMine = 1, filter = "HELPFUL", setPoint = {"CENTER", UIParent, "CENTER", 132, 0}},
+    {spellId = 25222, size = 34, unitId = "target", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[3]},
     -- PW:Shield on target
-    {spellId = 48066, size = 32, unitId = "target", isMine = "all", filter = "HELPFUL", setPoint = {"CENTER", UIParent, "CENTER", 169, 0}},
-    -- Surge of Light
-    {spellId = 33151, size = 32, unitId = "player", isMine = "all", filter = "HELPFUL", setPoint = {"CENTER", UIParent, "CENTER", 206, 0}},
+    {spellId = 48066, size = 34, unitId = "target", isMine = "all", filter = "HELPFUL", setPoint = Filter.position[2]},
+    -- Surge of Light, Borrowed Time
+    {spellId = 33151, spellId2 = 59891, size = 34, unitId = "player", isMine = "all", filter = "HELPFUL", setPoint = Filter.position[5]},
     -- SW:Pain
-    {spellId = 48125, size = 32, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 132, -37}},
+    {spellId = 48125, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[4]},
     -- VT (shadow)
-    {spellId = 48160, size = 32, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 169, -37}},
-    -- VE (shadow)
-    {spellId = 15286, size = 32, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 206, -37}},
+    {spellId = 48160, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[3]},
+    -- Shadow Weaving
+	{spellId = 15332, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[6]},
     -- Devouring Plague
-    {spellId = 48300, size = 32, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 243, -37}},
+    {spellId = 48300, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[5]},
     },
-    
-    
+
     ["ROGUE"] = {
+	-- Deadly Poison
+    {spellId = 57970, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[1]},
+	-- Wound Poison 
+    {spellId = 57975, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[2]},
+   	-- Crippling Poison 
+	{spellId = 44289, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[5]},
+    -- Mind-numbing Poison
+    {spellId = 41190, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[6]},
+	-- Slice and Dice
+	{spellId = 6774, size = 34, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[3]},
+	-- Rupture
+	{spellId = 48672, size = 34, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[4]},	
     },
-    
-    
+
     ["SHAMAN"] = {
     -- Hex
-    {spellId = 51514, size = 32, unitId = "target", isMine = "all", filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 132, 37}},
+    {spellId = 51514, size = 34, unitId = "target", isMine = "all", filter = "HARMFUL", setPoint = Filter.position[6]},
     -- Water Shield, Earth Shield, Lightning Shield
-    {spellId = 57960, spellId2 = 49284, spellId3 = 49281, size = 32, unitId = "player", isMine = "all", filter = "HELPFUL", setPoint = {"CENTER", UIParent, "CENTER", 132, 0}},
+    {spellId = 57960, spellId2 = 49284, spellId3 = 49281, size = 34, unitId = "player", isMine = "all", filter = "HELPFUL", setPoint = Filter.position[1]},
     -- Tidal Waves (resto), Maelstrom (ench)
-    {spellId = 53390, spellId2 = 53817, size = 32, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = {"CENTER", UIParent, "CENTER", 169, 0}},
+    {spellId = 53390, spellId2 = 53817, size = 34, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[3]},
     -- Flame Shock, Frost Shock
-    {spellId = 49233, spellId2 = 49236, size = 32, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 206, 0}},
+    {spellId = 49233, spellId2 = 49236, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[2]},
     -- ES on target (resto)
-    {spellId = 49284, size = 32, unitId = "target", isMine = "all", filter = "HELPFUL", setPoint = {"CENTER", UIParent, "CENTER", 132, -37}},
+    {spellId = 49284, size = 34, unitId = "target", isMine = "all", filter = "HELPFUL", setPoint = Filter.position[2]},
     -- Riptide (resto)
-    {spellId = 61301, size = 32, unitId = "target", isMine = "all", filter = "HELPFUL", setPoint = {"CENTER", UIParent, "CENTER", 169, -37}},
+    {spellId = 61301, size = 34, unitId = "target", isMine = "all", filter = "HELPFUL", setPoint = Filter.position[4]},
     },
-    
-    
+
     ["WARLOCK"] = {
-    -- CoE, Ebon Plaguebringer, Earth and Moon
-    {spellId = 47865, spellId2 = 51161, spellId3 = 48511, size = 32, unitId = "target", isMine = "all", filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 132, 0}},
+    -- CoE, Ebon Plague, Earth and Moon
+    {spellId = 47865, spellId2 = 51735, spellId3 = 48511, size = 34, unitId = "target", isMine = "all", filter = "HARMFUL", setPoint = Filter.position[1]},
     -- CoT, CoE, CoW
-    {spellId = 11719, spellId2 = 18223, spellId3 = 50511, size = 32, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 169, 0}},
-    -- Molten Core, (destro)
-    {spellId = 47383, size = 32, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = {"CENTER", UIParent, "CENTER", 206, 0}},
-    -- Decimation (demo), Backdraft (destro)
-    {spellId = 63158, spellId2 = 54277, size = 32, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = {"CENTER", UIParent, "CENTER", 243, 0}},
-    -- Immolation
-    {spellId = 47811, size = 32, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 132, -37}},
+    {spellId = 11719, spellId2 = 18223, spellId3 = 50511, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[1]},
+    -- Molten Core(destro), Shadow Trance (afflict)
+    {spellId = 47383, spellId2 = 17941, size = 34, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[2]},
+    -- Decimation (demo), Backdraft (destro), Eradication (afflict)
+    {spellId = 63158, spellId2 = 54277, spellId3 = 47195, spellId4 = 47196, spellId5 = 47197, size = 34, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[3]},
+    -- Immolation, Unstable Affliction (afflict)
+    {spellId = 47811, spellId2 = 47843, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[4]},
     -- Corruption
-    {spellId = 47813, size = 32, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 169, -37}},
+    {spellId = 47813, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[5]},
     -- CoA, CoD
-    {spellId = 47864, spellId2 = 47867, size = 32, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 206, -37}},
-    },
-    
-    
+    {spellId = 47864, spellId2 = 47867, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[6]},
+    -- Haunt
+	{spellId = 48181, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[6]},
+	-- Life Tap
+	{spellId = 63321, size = 34, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[5]},
+	-- Backlash
+	{spellId = 34936, size = 34, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[4]},
+	},
+
     ["WARRIOR"] = {
-    -- Blood Draining
-    {spellId = 64568, size = 32, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = {"CENTER", UIParent, "CENTER", 243, 37}},
     -- Instant Slam!
-    {spellId = 46916, size = 64, unitId = "player", isMine = "all", filter = "HELPFUL", setPoint = {"LEFT", UIParent, "CENTER", 85, 0}},
+    {spellId = 46916, size = 34, unitId = "player", isMine = "all", filter = "HELPFUL", setPoint = Filter.position[3]},
     -- Sudden Death
-    {spellId = 52437, size = 64, unitId = "player", isMine = "all", filter = "HELPFUL", setPoint = {"LEFT", UIParent, "CENTER", 85, 0}},
+    {spellId = 52437, size = 34, unitId = "player", isMine = "all", filter = "HELPFUL", setPoint = Filter.position[3]},
     -- Hamstring
-    {spellId = 1715, size = 32, unitId = "target", isMine = "all", filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 169, 37}},
+    {spellId = 1715, size = 34, unitId = "target", isMine = "all", filter = "HARMFUL", setPoint = Filter.position[6]},
     -- Rend
-    {spellId = 47465, size = 32, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 206, 37}},
+    {spellId = 47465, size = 34, unitId = "target", isMine = 1, filter = "HARMFUL", setPoint = Filter.position[4]},
     -- Instant Shield Slam
-    {spellId = 50227, size = 64, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = {"LEFT", UIParent, "CENTER", 85, 0}},
-    -- Armor debuff - major: sunder, expose
-    {spellId = 7386, spellId2 = 48669, size = 32, unitId = "target", isMine = "all", filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 169, 0}},
-    -- Attack speed debuff: warrior clap, feral wounds, dk frost fever
-    {spellId = 6343, spellId2 = 48485, spellId3 = 55095, size = 32, unitId = "target", isMine = "all", filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 206, 0}},
-    -- Attack power debuff: warrior shout, druid roar, lock curse
-    {spellId = 1160, spellId2 = 48560, spellId3 = 50511, size = 32, unitId = "target", isMine = "all", filter = "HARMFUL", setPoint = {"CENTER", UIParent, "CENTER", 243, 0}},
+    {spellId = 50227, size = 34, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[3]},
+	-- Last Stand
+	{spellId = 12975, size = 34, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[6]},
+	-- Shield Wall
+	{spellId = 871, size = 34, unitId = "player", isMine = 1, filter = "HELPFUL", setPoint = Filter.position[4]},
+	-- Armor debuff - major: sunder, expose
+    {spellId = 7386, spellId2 = 48669, size = 34, unitId = "target", isMine = "all", filter = "HARMFUL", setPoint = Filter.position[1]},
+    -- Attack speed debuff: warrior clap, feral wounds, dk frost fever, shamans earth shock, prot paladins judgment
+    {spellId = 6343, spellId2 = 48485, spellId3 = 55095, spellId4 = 49231, spellId5 = 53696,  size = 34, unitId = "target", isMine = "all", filter = "HARMFUL", setPoint = Filter.position[5]},
+    -- Attack power debuff: warrior shout, druid roar, lock curse, paladins vindication
+    {spellId = 1160, spellId2 = 48560, spellId3 = 50511, spellId4 = 26017, size = 34, unitId = "target", isMine = "all", filter = "HARMFUL", setPoint = Filter.position[2]},
     }
 }
 
@@ -203,7 +261,7 @@ local function CreateFilterFrame(data)
             end
         end
     end)
-    frame.icon = frame:CreateTexture("$parentIcon", "BACKGROUND")
+	frame.icon = frame:CreateTexture("$parentIcon", "BACKGROUND")
     frame.icon:SetAllPoints(frame)
     frame.icon:SetTexture(spellIcon)
     frame.icon:SetTexCoord(.1, .9, .1, .9)
@@ -218,13 +276,13 @@ local function CreateFilterFrame(data)
 	CreateBG(frame)
 end
 
-if Spells and Spells[PCLASS] then
-    for index in pairs(Spells) do
+if Filter.spells and Filter.spells[PCLASS] then
+    for index in pairs(Filter.spells) do
         if index ~= PCLASS then
-            Spells[index] = nil
+            Filter.spells[index] = nil
         end
     end
-    for i = 1, #Spells[PCLASS], 1 do
-        CreateFilterFrame(Spells[PCLASS][i])
+    for i = 1, #Filter.spells[PCLASS], 1 do
+        CreateFilterFrame(Filter.spells[PCLASS][i])
     end
 end
