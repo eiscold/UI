@@ -44,10 +44,9 @@ local UILoad = {
 	["threatmeter"]		= { load = true, },
 	["ticketstatus"]	= { load = true, },
 	["tooltip"]			= { load = true, },
+	["unitframes"]		= { load = true, },
 	["watchframe"]		= { load = true, },
 	["zonetext"]		= { load = true, },
-
-	["unitframes"]		= { load = true, },
 }
 
 function Load(name)
@@ -56,23 +55,23 @@ function Load(name)
 	if UILoad[name].load and UILoad.Loading then
 		if not UILoad[name].class or UILoad[name].class:find(PCLASS) then
 			if not UILoad[name].localization then
-				msg = "|cFF00FF00"..name.." loaded|r"
+				msg = "|cFF19E619"..name.." loaded|r"
 				state = true
 			else
 				if not L.localized then
-					msg = "|cFFFF0000"..name.." not loaded (localization missing: "..L.locale..")|r"
+					msg = "|cFFE61919"..name.." not loaded (localization missing: "..L.locale..")|r"
 					state = false
 				elseif L.localized then
-					msg = "|cFF00FF00"..name.." loaded|r"
+					msg = "|cFF19E619"..name.." loaded|r"
 					state = true
 				end
 			end
 		else
-			msg = "|cFFFF0000"..name.." not loaded (not designed for this class)|r"
+			msg = "|cFFE61919"..name.." not loaded (not designed for this class)|r"
 			state = false
 		end
 	else
-		msg = "|cFFFF0000"..name.." not loaded (disabled)|r"
+		msg = "|cFFE61919"..name.." not loaded (disabled)|r"
 		state = false
 	end
 	if CFG.Debug then

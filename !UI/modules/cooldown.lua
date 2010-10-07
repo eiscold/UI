@@ -37,11 +37,9 @@ hooksecurefunc(methods, "SetCooldown", function(self, start, duration)
 		if rsize < 10 then
 			return
 		end
-
 		self.start = start
 		self.duration = duration
 		self.nextUpdate = 0
-
 		local text = self.text
 		if not text then
 			text = CreateFS(self, rsize, "CENTER")
@@ -49,7 +47,6 @@ hooksecurefunc(methods, "SetCooldown", function(self, start, duration)
 			self.text = text
 			self:SetScript("OnUpdate", Timer_OnUpdate)
 		end
-
 		text:Show()
 	elseif self.text then
 		self.text:Hide()

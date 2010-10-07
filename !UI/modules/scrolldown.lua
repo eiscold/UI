@@ -3,7 +3,7 @@ if not Load"scrolldown" then
 end
 
 local ScrolldownFrame = CreateFrame"Frame"
-ScrolldownFrame.delay = 5
+ScrolldownFrame.delay = 30
 ScrolldownFrame.funcs = {
 	"ScrollUp",
 	"ScrollDown",

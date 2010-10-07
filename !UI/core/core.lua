@@ -61,6 +61,9 @@ factioninfo = {
 	[8] = {{unpack(reactioncolors[8])}, FACTION_STANDING_LABEL8},
 }
 
+FACTION_STANDING_DECREASED = "|3-7(%s) -%d"
+FACTION_STANDING_INCREASED = "|3-7(%s) +%d"
+
 function GetMyColor()
 	--return .35, .55, .55
 	return .5, .5, .5, 1
@@ -82,6 +85,17 @@ end
 
 function dummy() end
 
+function CreateBD(parent, alpha, r, g, b)
+	local bd = CreateFrame("Frame", nil, parent)
+	bd:SetPoint("TOPLEFT", -5, 5)
+	bd:SetPoint("BOTTOMRIGHT", 5, -5)
+	bd:SetFrameStrata"BACKGROUND"
+	bd:SetBackdrop(BACKDROP)
+	bd:SetBackdropColor(r or 0, g or 0, b or 0, alpha or 1)
+	bd:SetBackdropBorderColor(r or 0, g or 0, b or 0, alpha or 1)
+	return bd
+end
+
 function CreateBG(parent, abg, abd, r, g, b)
 	local bg = parent:CreateTexture(nil, "BACKGROUND")
 	bg:SetAllPoints(parent)
@@ -91,7 +105,7 @@ function CreateBG(parent, abg, abd, r, g, b)
 	bd:SetPoint("BOTTOMRIGHT", 5, -5)
 	bd:SetFrameStrata"BACKGROUND"
 	bd:SetBackdrop(BACKDROP)
-	bd:SetBackdropColor(r or 0, g or 0, b or 0, a or 1)
+	bd:SetBackdropColor(r or 0, g or 0, b or 0, abd or 1)
 	bd:SetBackdropBorderColor(r or 0, g or 0, b or 0, abd or 1)
 	return bg, bd
 end
@@ -137,19 +151,17 @@ function CreatePulse(frame, low, high, speed, mult, alpha)
 	end)
 end
 
-function CreatePulseBG(frame, type)
+function CreateButtonPulse(frame)
 	frame.glow = CreateFrame("Frame", nil, frame)
 	frame.glow:SetBackdrop(BACKDROP)
 	frame.glow:SetPoint("TOPLEFT", frame, -5, 5)
 	frame.glow:SetPoint("BOTTOMRIGHT", frame, 5, -5)
 	frame.glow:SetBackdropBorderColor(GetMyPulseColor())
 	frame.glow:SetAlpha(0)
-	if type == "button" then
-		frame:SetNormalTexture""
-		frame:SetHighlightTexture""
-		frame:SetPushedTexture""
-		frame:SetDisabledTexture""
-	end
+	frame:SetNormalTexture""
+	frame:SetHighlightTexture""
+	frame:SetPushedTexture""
+	frame:SetDisabledTexture""
 	frame.bg, frame.bd = CreateBG(frame, 0, .3)
 	frame.bg:SetTexture(1, 1, 1, .1)
 	frame.bd:SetBackdropColor(1, 1, 1, 1)
@@ -191,7 +203,7 @@ function GameTooltip_UnitColor(unit)
 	local r, g, b = 1, 1, 1
 	if UnitIsPlayer(unit) then
 		local _, class = UnitClass(unit)
-		r, g, b = unpack(classcolors[class or "WARRIOR"])
+		r, g, b = unpack(classcolors[class or PCLASS])
 	elseif UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit) or UnitIsDead(unit) then
 		r, g, b = .6, .6, .6
 	else
@@ -209,5 +221,26 @@ function IsInArena()
 	end
 end
 
-FACTION_STANDING_DECREASED = "|3-7(%s) -%d"
-FACTION_STANDING_INCREASED = "|3-7(%s) +%d"
+function StringHash(text)
+	local counter = 1
+	local len = string.len(text)
+	for i = 1, len, 3 do 
+		counter = math.fmod(counter * 8161, 4294967279) +
+  			(string.byte(text, i) * 16776193) +
+  			((string.byte(text, i + 1) or (len - i + 256)) * 8372226) +
+  			((string.byte(text, i + 2) or (len - i + 256)) * 3932164)
+	end
+	return math.fmod(counter, 4294967291)
+end
+
+function argprint(...)
+	for i = 1, select("#", ...) do
+		print(tostring(select(i, ...)))
+	end
+end
+
+function tprint(t)
+	for k, _ in pairs(t) do
+		print(k)
+	end
+end

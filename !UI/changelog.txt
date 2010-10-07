@@ -34,7 +34,7 @@ _______________________________________________________________________________
 	
 	* major code overhaul
 
-	* rearange filter module icons (mage)
+	* rearanged filter module icons
 		-> moved to center, above target frame
 ________________________________________________________________________________
 
@@ -42,7 +42,8 @@ ________________________________________________________________________________
 
 ________________________________________________________________________________
 
-3.3.5.13
+3.3.5.14
+	!+ add number of greeds needs disenchants to the grouploot frame
 	!* shaman totem interface
 	!* solve bug: main tank target and target target not shown
 ________________________________________________________________________________
