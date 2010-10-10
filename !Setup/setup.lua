@@ -61,6 +61,8 @@ local function SetupUI()
 
 	FCF_SavePositionAndDimensions(ChatFrame1)
 	FCF_SetLocked(ChatFrame1, 1)
+	FCF_SetWindowAlpha(ChatFrame1, 0)
+	FCF_SetWindowAlpha(ChatFrame2, 0)
 
 	local channels = {
 		"SAY",
