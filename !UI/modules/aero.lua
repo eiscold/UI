@@ -77,7 +77,7 @@ local function RegisterFrames(...)
 		if type(arg) == "string" then
 			local frame = _G[arg]
 			if not frame and CFG.Debug then
-				return print(UI_NAME.." Aero module: |cff98F5FF", select(i, ...), "|r not found")
+				return print(UI_NAME.." Aero module: |cffE61919", select(i, ...), "|r not found")
 			else
 				frame.Aero = frame.Aero or {}
 				frame.Aero.total = 0
@@ -90,14 +90,13 @@ local function RegisterFrames(...)
 	end
 end
 
-local function OnEvent(self, event, addon)
+Aero:RegisterEvent"ADDON_LOADED"
+Aero:SetScript("OnEvent", function(self, event, addon)
 	if Aero.addons[addon] then
 		RegisterFrames(unpack(Aero.addons[addon]))
 		Aero.addons[addon] = nil
 	end
-end
-Aero:RegisterEvent"ADDON_LOADED"
-Aero:SetScript("OnEvent", OnEvent)
+end)
 
 local function RegisterAddon(addon, ...)
 	if IsAddOnLoaded(addon) then

@@ -134,7 +134,7 @@ function Pending(unit, cond)
 	end
 end
 
-FadeFrame:SetScript("OnEvent", function(self, event, ...) 
+local function OnEvent(self, event, ...) 
 	for name, entry in pairs(FadeFrame.frames) do
 		local frame = _G[name]
 		if frame and name then
@@ -149,8 +149,9 @@ FadeFrame:SetScript("OnEvent", function(self, event, ...)
 			end
 		end
 	end
-end)
+end
 
+FadeFrame:RegisterEvent"ADDON_LOADED"
 FadeFrame:RegisterEvent"PLAYER_REGEN_DISABLED"
 FadeFrame:RegisterEvent"PLAYER_REGEN_ENABLED"
 FadeFrame:RegisterEvent"PLAYER_ENTERING_WORLD"
@@ -166,3 +167,42 @@ FadeFrame:RegisterEvent"UNIT_SPELLCAST_CHANNEL_START"
 FadeFrame:RegisterEvent"UNIT_SPELLCAST_CHANNEL_UPDATE"
 FadeFrame:RegisterEvent"UNIT_SPELLCAST_CHANNEL_INTERRUPTED"
 FadeFrame:RegisterEvent"UNIT_SPELLCAST_CHANNEL_STOP"
+FadeFrame:SetScript("OnEvent", function(self, event, ...) 
+	if event == "ADDON_LOADED" then
+		self:UnregisterEvent"ADDON_LOADED"
+		self:SetScript("OnEvent", OnEvent)
+	end
+end)
+
+-- "frame", {cond, alpha, showalpha, {hover}}
+-- frame, {table}
+local function RegisterFrames(...)
+	for i = 1, select("#", ...), 2 do
+		local arg = select(i, ...)
+		if type(arg) == "string" then
+			local frame = _G[arg]
+			if not frame and CFG.Debug then
+				return print(UI_NAME.." Fade module: |cffE61919", select(i, ...), "|r not found")
+			else
+				FadeFrame.frames[arg] = select(i + 1, ...)
+			end
+		end
+	end
+end
+
+-- "Addon", {"frame", {cond, alpha, showalpha, {hover}}}, {}
+local function RegisterAddon(addon, ...)
+	if IsAddOnLoaded(addon) then
+		RegisterFrames(...)
+	else
+		local _, _, _, enabled = GetAddOnInfo(addon)
+		if enabled then
+			local frame, table
+			for i = 1, select("#", ...) do
+				frame, table = unpack(select(i, ...))
+				FadeFrame.frames[frame] = {}
+				tinsert(FadeFrame.frames[frame], table)
+			end
+		end
+	end
+end
