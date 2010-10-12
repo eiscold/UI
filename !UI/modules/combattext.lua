@@ -323,12 +323,12 @@ if PCLASS == "PRIEST" then
 end
 
 if CombatFrame.Damage then
-	InterfaceOptionsCombatTextPanelTargetDamage:Hide()
-	InterfaceOptionsCombatTextPanelPeriodicDamage:Hide()
-	InterfaceOptionsCombatTextPanelPetDamage:Hide()
-	SetCVar("CombatLogPeriodicSpells", 0)
-	SetCVar("PetMeleeDamage", 0)
-	SetCVar("CombatDamage", 0)
+	--InterfaceOptionsCombatTextPanelTargetDamage:Hide()
+	--InterfaceOptionsCombatTextPanelPeriodicDamage:Hide()
+	--InterfaceOptionsCombatTextPanelPetDamage:Hide()
+	--SetCVar("CombatLogPeriodicSpells", 0)
+	--SetCVar("PetMeleeDamage", 0)
+	--SetCVar("CombatDamage", 0)
 	CombatFrame4:RegisterEvent"COMBAT_LOG_EVENT_UNFILTERED"
 	if CombatFrame.DamageColor then
 		CombatFrame.dmgcolor = {}

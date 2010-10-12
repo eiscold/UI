@@ -49,7 +49,7 @@ local UILoad = {
 	["zonetext"]		= { load = true, },
 }
 
-function Load(name)
+function Load(name, check)
 	local msg
 	local state = false
 	if UILoad[name].load and UILoad.Loading then
@@ -74,7 +74,7 @@ function Load(name)
 		msg = "|cFFE61919"..name.." not loaded (disabled)|r"
 		state = false
 	end
-	if CFG.Debug then
+	if CFG.Debug and not check then
 		print(msg)
 	end
 	return state

@@ -74,6 +74,8 @@ local function UpdateFrame(self)
 		self.level:Show()
 	elseif not elite and level == PLEVEL then
 		self.level:Hide()
+	elseif level == 1 then
+		self:Hide()
 	else
 		self.level:SetText(level..(elite and "+" or ""))
 	end

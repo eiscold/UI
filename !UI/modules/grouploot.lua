@@ -5,23 +5,21 @@ end
 UIParent:UnregisterEvent"START_LOOT_ROLL"
 UIParent:UnregisterEvent"CANCEL_LOOT_ROLL"
 
-local GroupLootFrame = CreateFrame("Frame", "GroupLoot", UIParent)
+local GroupLootFrame = CreateFrame("Frame", "GroupLootFrame", UIParent)
 GroupLootFrame:SetPoint("RIGHT", -50, 0)
 GroupLootFrame:SetWidth(200)
 GroupLootFrame:SetHeight(24)
 GroupLootFrame.iconSize = 32
 GroupLootFrame.list = {}
 GroupLootFrame.frames = {}
-
-local function OnEvent(self, event, rollId)
-	local _, _, _, quality, bop, _, _, canDE = GetLootRollItemInfo(rollId)
-	if quality == 2 and not bop and PLEVEL == MAX_PLAYER_LEVEL then
-		RollOnLoot(rollId, canDE and 3 or 2)
-	else
-		tinsert(GroupLootFrame.list, {rollId = rollId})
-		UpdateGroupLoot()
-	end
-end
+GroupLootFrame.strings = {
+	[(LOOT_ROLL_PASSED_AUTO):gsub("%%1$s", "(.+)"):gsub("%%2$s", "(.+)")] = 0,
+	[(LOOT_ROLL_PASSED_AUTO_FEMALE):gsub("%%1$s", "(.+)"):gsub("%%2$s", "(.+)")] = 0,
+	[(LOOT_ROLL_PASSED):gsub("%%s", "(.+)")] = 0,
+	[(LOOT_ROLL_GREED):gsub("%%s", "(.+)")] = 2,
+	[(LOOT_ROLL_NEED):gsub("%%s", "(.+)")] = 1,
+	[(LOOT_ROLL_DISENCHANT):gsub("%%s", "(.+)")] = 3
+}
 
 local function FrameOnEvent(self, event, rollId)
 	if self.rollId and rollId == self.rollId then
@@ -70,6 +68,9 @@ function UpdateGroupLoot()
 	sort(GroupLootFrame.list, SortFunc)
 	for index, value in next, GroupLootFrame.frames do
 		value:Hide()
+		for i = 0, #value.button do
+			value.button[i].text:SetText""
+		end
 	end
 	local frame
 	for index, value in next, GroupLootFrame.list do
@@ -86,86 +87,97 @@ function UpdateGroupLoot()
 			frame:SetScript("OnLeave", FrameOnLeave)
 			frame:SetScript("OnEnter", FrameOnEnter)
 			CreateBG(frame, .7)
-			frame.pass = CreateFrame("Button", nil, frame)
-			frame.pass.type = 0
-			frame.pass.roll = "pass"
-			frame.pass:SetWidth(28)
-			frame.pass:SetHeight(28)
-			frame.pass:SetNormalTexture"Interface\\Buttons\\UI-GroupLoot-Pass-Up"
-			frame.pass:SetHighlightTexture"Interface\\Buttons\\UI-GroupLoot-Pass-Down"
-			frame.pass:SetPoint("RIGHT", 0, 1)
-			frame.pass:SetScript("OnClick", ButtonOnClick)
-			frame.greed = CreateFrame("Button", nil, frame)
-			frame.greed.type = 2
-			frame.greed.roll = "greed"
-			frame.greed:SetWidth(28)
-			frame.greed:SetHeight(28)
-			frame.greed:SetNormalTexture"Interface\\Buttons\\UI-GroupLoot-Coin-Up"
-			frame.greed:SetPushedTexture"Interface\\Buttons\\UI-GroupLoot-Coin-Down"
-			frame.greed:SetHighlightTexture"Interface\\Buttons\\UI-GroupLoot-Coin-Highlight"
-			frame.greed:SetPoint("RIGHT", frame.pass, "LEFT", -1, -4)
-			frame.greed:SetScript("OnClick", ButtonOnClick)
-			frame.disenchant = CreateFrame("Button", nil, frame)
-			frame.disenchant.type = 3
-			frame.disenchant.roll = "disenchant"
-			frame.disenchant:SetWidth(28)
-			frame.disenchant:SetHeight(28)
-			frame.disenchant:SetNormalTexture"Interface\\Buttons\\UI-GroupLoot-DE-Up"
-			frame.disenchant:SetPushedTexture"Interface\\Buttons\\UI-GroupLoot-DE-Down"
-			frame.disenchant:SetHighlightTexture"Interface\\Buttons\\UI-GroupLoot-DE-Highlight"
-			frame.disenchant:SetPoint("RIGHT", frame.greed, "LEFT", -1, 2)
-			frame.disenchant:SetScript("OnClick", ButtonOnClick)
-			frame.need = CreateFrame("Button", nil, frame)
-			frame.need.type = 1
-			frame.need.roll = "need"
-			frame.need:SetWidth(28)
-			frame.need:SetHeight(28)
-			frame.need:SetNormalTexture"Interface\\Buttons\\UI-GroupLoot-Dice-Up"
-			frame.need:SetPushedTexture"Interface\\Buttons\\UI-GroupLoot-Dice-Down"
-			frame.need:SetHighlightTexture"Interface\\Buttons\\UI-GroupLoot-Dice-Highlight"
-			frame.need:SetPoint("RIGHT", frame.disenchant, "LEFT", -1, 0)
-			frame.need:SetScript("OnClick", ButtonOnClick)
+			frame.button = {}
+			frame.button[0] = CreateFrame("Button", nil, frame)
+			frame.button[0].type = 0
+			frame.button[0].roll = "pass"
+			frame.button[0]:SetWidth(28)
+			frame.button[0]:SetHeight(28)
+			frame.button[0]:SetNormalTexture"Interface\\Buttons\\UI-GroupLoot-Pass-Up"
+			frame.button[0]:SetHighlightTexture"Interface\\Buttons\\UI-GroupLoot-Pass-Down"
+			frame.button[0]:SetPoint("RIGHT", 0, 1)
+			frame.button[0].text = CreateFS(frame.button[0], 12, "CENTER")
+			frame.button[0].text:SetPoint("CENTER", 0, 2)
+			frame.button[0].text:SetText""
+			frame.button[0]:SetScript("OnClick", ButtonOnClick)
+			frame.button[2] = CreateFrame("Button", nil, frame)
+			frame.button[2].type = 2
+			frame.button[2].roll = "greed"
+			frame.button[2]:SetWidth(28)
+			frame.button[2]:SetHeight(28)
+			frame.button[2]:SetNormalTexture"Interface\\Buttons\\UI-GroupLoot-Coin-Up"
+			frame.button[2]:SetPushedTexture"Interface\\Buttons\\UI-GroupLoot-Coin-Down"
+			frame.button[2]:SetHighlightTexture"Interface\\Buttons\\UI-GroupLoot-Coin-Highlight"
+			frame.button[2]:SetPoint("RIGHT", frame.button[0], "LEFT", -1, -4)
+			frame.button[2].text = CreateFS(frame.button[2], 12, "CENTER")
+			frame.button[2].text:SetPoint("CENTER", 0, 4)
+			frame.button[2].text:SetText""
+			frame.button[2]:SetScript("OnClick", ButtonOnClick)
+			frame.button[3] = CreateFrame("Button", nil, frame)
+			frame.button[3].type = 3
+			frame.button[3].roll = "disenchant"
+			frame.button[3]:SetWidth(28)
+			frame.button[3]:SetHeight(28)
+			frame.button[3]:SetNormalTexture"Interface\\Buttons\\UI-GroupLoot-DE-Up"
+			frame.button[3]:SetPushedTexture"Interface\\Buttons\\UI-GroupLoot-DE-Down"
+			frame.button[3]:SetHighlightTexture"Interface\\Buttons\\UI-GroupLoot-DE-Highlight"
+			frame.button[3]:SetPoint("RIGHT", frame.button[2], "LEFT", -1, 2)
+			frame.button[3].text = CreateFS(frame.button[3], 12, "CENTER")
+			frame.button[3].text:SetPoint("CENTER", 0, 2)
+			frame.button[3].text:SetText""
+			frame.button[3]:SetScript("OnClick", ButtonOnClick)
+			frame.button[1] = CreateFrame("Button", nil, frame)
+			frame.button[1].type = 1
+			frame.button[1].roll = "need"
+			frame.button[1]:SetWidth(28)
+			frame.button[1]:SetHeight(28)
+			frame.button[1]:SetNormalTexture"Interface\\Buttons\\UI-GroupLoot-Dice-Up"
+			frame.button[1]:SetPushedTexture"Interface\\Buttons\\UI-GroupLoot-Dice-Down"
+			frame.button[1]:SetHighlightTexture"Interface\\Buttons\\UI-GroupLoot-Dice-Highlight"
+			frame.button[1]:SetPoint("RIGHT", frame.button[3], "LEFT", -1, 0)
+			frame.button[1].text = CreateFS(frame.button[1], 12, "CENTER")
+			frame.button[1].text:SetPoint("CENTER", 0, 2)
+			frame.button[1].text:SetText""
+			frame.button[1]:SetScript("OnClick", ButtonOnClick)
 			frame.text = CreateFS(frame, 12, "LEFT")
 			frame.text:SetPoint"LEFT"
-			frame.text:SetPoint("RIGHT", frame.need, "LEFT")
+			frame.text:SetPoint("RIGHT", frame.button[1], "LEFT")
 			local iconFrame = CreateFrame("Frame", nil, frame)
 			iconFrame:SetHeight(GroupLootFrame.iconSize)
 			iconFrame:SetWidth(GroupLootFrame.iconSize)
 			iconFrame:ClearAllPoints()
 			iconFrame:SetPoint("RIGHT", frame, "LEFT", -3, 0)
-			local icon = iconFrame:CreateTexture(nil, "BACKGROUND")
-			icon:SetTexCoord(.1, .9, .1, .9)
-			icon:SetPoint("TOPLEFT", iconFrame, "TOPLEFT", 2, -2)
-			icon:SetPoint("BOTTOMRIGHT", iconFrame, "BOTTOMRIGHT", -2, 2)
-			frame.icon = icon
-			local overlay = CreateFrame("Frame", nil, iconFrame)
-			overlay:SetPoint("TOPLEFT", -3, 3)
-			overlay:SetPoint("BOTTOMRIGHT", 3, -3)
-			overlay:SetFrameStrata"BACKGROUND"
-			overlay:SetBackdrop(BACKDROP)
-			overlay:SetBackdropBorderColor(0, 0, 0)
-			frame.overlay = overlay
+			frame.icon = iconFrame:CreateTexture(nil, "BACKGROUND")
+			frame.icon:SetTexCoord(.1, .9, .1, .9)
+			frame.icon:SetPoint("TOPLEFT", iconFrame, "TOPLEFT", 2, -2)
+			frame.icon:SetPoint("BOTTOMRIGHT", iconFrame, "BOTTOMRIGHT", -2, 2)
+			frame.overlay = CreateFrame("Frame", nil, iconFrame)
+			frame.overlay:SetPoint("TOPLEFT", -3, 3)
+			frame.overlay:SetPoint("BOTTOMRIGHT", 3, -3)
+			frame.overlay:SetFrameStrata"BACKGROUND"
+			frame.overlay:SetBackdrop(BACKDROP)
+			frame.overlay:SetBackdropBorderColor(0, 0, 0)
 			tinsert(GroupLootFrame.frames, frame)
 		end
 		local texture, name, count, quality, bindOnPickUp, Needable, Greedable, Disenchantable = GetLootRollItemInfo(value.rollId)
 		if Disenchantable then
-			frame.disenchant:Enable()
+			frame.button[3]:Enable()
 		else
-			frame.disenchant:Disable()
+			frame.button[3]:Disable()
 		end
 		if Needable then
-			frame.need:Enable()
+			frame.button[1]:Enable()
 		else
-			frame.need:Disable()
+			frame.button[1]:Disable()
 		end
 		if Greedable then
-			frame.greed:Enable()
+			frame.button[2]:Enable()
 		else
-			frame.greed:Disable()
+			frame.button[2]:Disable()
 		end
-		SetDesaturation(frame.disenchant:GetNormalTexture(), not Disenchantable)
-		SetDesaturation(frame.need:GetNormalTexture(), not Needable)
-		SetDesaturation(frame.greed:GetNormalTexture(), not Greedable)
+		SetDesaturation(frame.button[3]:GetNormalTexture(), not Disenchantable)
+		SetDesaturation(frame.button[1]:GetNormalTexture(), not Needable)
+		SetDesaturation(frame.button[2]:GetNormalTexture(), not Greedable)
 		frame.text:SetText(ITEM_QUALITY_COLORS[quality].hex..name)
 		frame.icon:SetTexture(texture) 
 		frame.rollId = value.rollId
@@ -174,5 +186,31 @@ function UpdateGroupLoot()
 	end
 end
 
+GroupLootFrame:RegisterEvent"CHAT_MSG_LOOT"
 GroupLootFrame:RegisterEvent"START_LOOT_ROLL"
-GroupLootFrame:SetScript("OnEvent", OnEvent)
+GroupLootFrame:SetScript("OnEvent", function(self, event, ...)
+	if event == "CHAT_MSG_LOOT" then
+		local msg = ...
+		for string, type in pairs(GroupLootFrame.strings) do
+			local _, _, player, item = string.find(msg, string)
+			if player and item then
+				for _, frame in ipairs(GroupLootFrame.frames) do
+					if frame.rollId and frame.rollLink == item then
+						frame.button[type].count = (frame.button[type].count % 5 or 0) + 1
+						frame.button[type].text:SetText(frame.button[type].count)
+						return
+					end
+				end
+			end
+		end
+	elseif event == "START_LOOT_ROLL" then
+		local rollId, rollTime = ...
+		local _, _, _, quality, bop, _, _, canDE = GetLootRollItemInfo(rollId)
+		if quality == 2 and not bop and PLEVEL == MAX_PLAYER_LEVEL+1 then
+			RollOnLoot(rollId, canDE and 3 or 2)
+		else
+			tinsert(GroupLootFrame.list, {rollId = rollId})
+			UpdateGroupLoot()
+		end
+	end
+end)
