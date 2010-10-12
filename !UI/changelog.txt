@@ -43,7 +43,9 @@ ________________________________________________________________________________
 ________________________________________________________________________________
 
 3.3.5.14
-	!+ add number of greeds needs disenchants to the grouploot frame - TEST
+	!+ add number of greeds needs disenchants to the grouploot frame
+		-> TEST pass&reset of count
+
 	!* shaman totem interface
 	!* solve bug: main tank target and target target not shown
 	!* change fade module code to add fade to frames loaded after the moudle
